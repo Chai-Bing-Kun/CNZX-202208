@@ -21,4 +21,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     observer.observe(aboutUs);
+
+    // 检测是否为移动设备并调整轮播图高度
+    function adjustCarouselForMobile() {
+        const carousel = document.querySelector('.carousel');
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+        if (isMobile) {
+            carousel.style.height = '50vh'; // 在移动设备上减少轮播图高度
+        } else {
+            carousel.style.height = '100vh'; // 在桌面设备上恢复全高
+        }
+    }
+
+    // 初始调整
+    adjustCarouselForMobile();
+
+    // 监听窗口大小变化
+    window.addEventListener('resize', adjustCarouselForMobile);
 });

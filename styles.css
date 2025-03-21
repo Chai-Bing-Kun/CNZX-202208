@@ -161,3 +161,14 @@ a {
     80%, 96% { transform: translateX(-400%); }   /* 第5张 */
     100% { transform: translateX(-400%); }       /* 保持最后一张 */
 }
+
+/* 移动设备样式 */
+@media (max-width: 768px) {
+    .carousel {
+        height: 50vh; /* 在移动设备上减少轮播图高度 */
+    }
+
+    .slide img {
+        object-fit: contain; /* 在移动设备上保持图片比例 */
+    }
+}
