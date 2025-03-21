@@ -1,0 +1,163 @@
+:root {
+    --bg-dark: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --text-light: #e6e6e6;
+    --accent-color: #00b4d8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+}
+
+/* 轮播图样式 */
+.carousel {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 3px solid var(--accent-color);
+}
+
+.slides {
+    display: flex;
+    animation: slide 25s infinite;
+}
+
+.slide {
+    min-width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.9;
+}
+
+/* 内容区域 */
+.content {
+    padding: 80px 20px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255,255,255,0.1);
+    opacity: 0; /* 初始状态为透明 */
+    transform: translateY(20px); /* 初始状态向下偏移 */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.card.visible {
+    opacity: 1; /* 可见状态 */
+    transform: translateY(0); /* 恢复原位 */
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0,180,216,0.2);
+    border-color: var(--accent-color);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.card h2 {
+    padding: 25px;
+    text-align: center;
+    color: var(--text-light);
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+a {
+    text-decoration: none;
+    display: block;
+}
+
+/* 关于我们部分 */
+.about-us {
+    padding: 80px 20px;
+    background: var(--card-bg);
+    text-align: center;
+    opacity: 0; /* 初始状态为透明 */
+    transform: translateY(20px); /* 初始状态向下偏移 */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.about-us.visible {
+    opacity: 1; /* 可见状态 */
+    transform: translateY(0); /* 恢复原位 */
+}
+
+.about-us h2 {
+    font-size: 2rem; /* 标题字体稍小 */
+    margin-bottom: 20px;
+    color: var(--text-light);
+}
+
+.about-us p {
+    font-size: 1rem; /* 正文字体稍小 */
+    color: var(--text-light);
+    margin-bottom: 10px;
+}
+
+.classmates {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 四列布局 */
+    gap: 10px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+    font-size: 0.9rem; /* 同学名字字体稍小 */
+}
+
+.additional-content {
+    margin-top: 40px;
+    font-size: 1rem;
+    color: var(--text-light);
+    text-align: left;
+    max-width: 1200px;
+    margin: 20px auto 40px; /* 增加底部间距 */
+}
+
+.contact-info {
+    margin-top: 40px;
+    font-size: 1rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+/* 修改后的轮播动画 */
+@keyframes slide {
+    0%, 16% { transform: translateX(0); }        /* 第1张 */
+    20%, 36% { transform: translateX(-100%); }   /* 第2张 */
+    40%, 56% { transform: translateX(-200%); }   /* 第3张 */
+    60%, 76% { transform: translateX(-300%); }   /* 第4张 */
+    80%, 96% { transform: translateX(-400%); }   /* 第5张 */
+    100% { transform: translateX(-400%); }       /* 保持最后一张 */
+}
