@@ -174,3 +174,86 @@ a {
         height: 100%;
     }
 }
+
+/* 从no-body.html和no-information.html中提取的样式 */
+.empty-page {
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    background-color: var(--bg-dark);
+    height: 100vh;
+    cursor: none;
+}
+
+.mouse-glow {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle, 
+        rgba(0, 180, 216, 0.8) 0%, 
+        rgba(0, 180, 216, 0.4) 50%, 
+        rgba(0, 180, 216, 0) 70%
+    );
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    filter: blur(10px);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.1s ease-out;
+    z-index: 1;
+}
+
+.back-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    z-index: 10;
+}
+
+.main-text {
+    font-size: 3rem;
+    color: var(--text-light);
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 11;
+    text-align: center;
+    padding: 0 20px;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.sub-text {
+    font-size: 1.2rem;
+    color: var(--accent-color);
+    position: relative;
+    z-index: 11;
+    text-align: center;
+    padding: 0 20px;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.back-button:hover .sub-text {
+    transform: translateY(5px);
+}
+
+@media (max-width: 768px) {
+    .main-text {
+        font-size: 2rem;
+    }
+    
+    .sub-text {
+        font-size: 1rem;
+    }
+    
+    .mouse-glow {
+        width: 150px;
+        height: 150px;
+    }
+}

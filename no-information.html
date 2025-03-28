@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>这个人很懒，什么都没有留下</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="empty-page">
+    <div class="mouse-glow" id="mouseGlow"></div>
+    
+    <a href="index.html" class="back-button">
+        <div class="main-text">这个人很懒，什么都没有留下</div>
+        <div class="sub-text">点击回到主界面</div>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mouseGlow = document.getElementById('mouseGlow');
+            let mouseX = 0;
+            let mouseY = 0;
+            let glowX = 0;
+            let glowY = 0;
+            
+            document.addEventListener('mousemove', function(e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                mouseGlow.style.opacity = '1';
+            });
+            
+            document.addEventListener('mouseleave', function() {
+                mouseGlow.style.opacity = '0';
+            });
+            
+            document.addEventListener('mouseenter', function() {
+                mouseGlow.style.opacity = '1';
+            });
+            
+            function animate() {
+                glowX += (mouseX - glowX) * 0.2;
+                glowY += (mouseY - glowY) * 0.2;
+                mouseGlow.style.left = `${glowX}px`;
+                mouseGlow.style.top = `${glowY}px`;
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+            
+            document.querySelector('.back-button').addEventListener('click', function(e) {
+                e.preventDefault();
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                    window.location.href = this.getAttribute('href');
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>
