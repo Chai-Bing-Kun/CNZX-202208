@@ -1,136 +1,128 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>初中生活记忆馆</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>奇幻世界入口</title>
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: #020b15;
+        }
+        #portal-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'YouYuan', 'Microsoft YaHei', sans-serif; /* 主要使用幼圆字体 */
+            font-size: 5em;
+            letter-spacing: 0.2em;
+            color: #f8f8ff;
+            text-shadow: 0 0 10px #4fc3f7;
+            cursor: pointer;
+            z-index: 100;
+            opacity: 0;
+            animation: fadeIn 2s ease-out forwards;
+            transition: all 0.5s ease;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+    <!-- 加载微软雅黑作为备选，中文用户通常自带幼圆字体 -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
 </head>
 <body>
-    <!-- 轮播图区域 -->
-    <div class="carousel">
-        <div class="slides">
-            <div class="slide">
-                <img src="img\1.JPG" alt="班级合影">
-            </div>
-            <div class="slide">
-                <img src="img\2.JPG" alt="运动会瞬间">
-            </div>
-            <div class="slide">
-                <img src="img\3.JPG" alt="课堂时光">
-            </div>
-            <div class="slide">
-                <img src="img\4.JPG" alt="毕业典礼">
-            </div>
-            <div class="slide">
-                <img src="img\5.JPG" alt="课外实践">
-            </div>
-        </div>
-    </div>
+    <div id="portal-text">进入世界</div>
 
-    <!-- 内容区域 -->
-    <div class="content">
-        <div class="grid-container">
-            <a href="no-body.html" target="_blank" class="card">
-                <img src="img\4.JPG" alt="运动会">
-                <h2>热血运动会</h2>
-            </a>
+    <script>
+        // Three.js初始化代码（保持原有星云背景）
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-            <a href="no-body.html" target="_blank" class="card">
-                <img src="img\5.JPG" alt="课堂时光">
-                <h2>课堂剪影</h2>
-            </a>
+        // 创建粒子星云（简化版）
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(2000 * 3);
+        for (let i = 0; i < 2000; i++) {
+            positions[i*3] = (Math.random() - 0.5) * 1000;
+            positions[i*3+1] = (Math.random() - 0.5) * 1000;
+            positions[i*3+2] = (Math.random() - 0.5) * 1000;
+        }
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const particleSystem = new THREE.Points(
+            particles,
+            new THREE.PointsMaterial({ 
+                size: 2, 
+                color: 0x88ccff,
+                transparent: true,
+                opacity: 0.7
+            })
+        );
+        scene.add(particleSystem);
+        camera.position.z = 100;
 
-            <a href="no-body.html" target="_blank" class="card">
-                <img src="img/6.JPG" alt="课外活动">
-                <h2>社团活动</h2>
-            </a>
+        // 动画循环
+        function animate() {
+            requestAnimationFrame(animate);
+            particleSystem.rotation.y += 0.001;
+            renderer.render(scene, camera);
+        }
+        animate();
 
-            <a href="no-body.html" target="_blank" class="card">
-                <img src="img\7.JPG" alt="校园风景">
-                <h2>美丽校园</h2>
-            </a>
+        // 点击动画
+        document.getElementById('portal-text').addEventListener('click', function() {
+            this.style.animation = 'none';
+            this.offsetHeight; // 触发重绘
+            this.style.animation = 'pulse 1.5s infinite alternate';
             
-            <a href="no-body.html" target="_blank" class="card">
-                <img src="img\7.JPG" alt="研学图片">
-                <h2>八班故事</h2>
-            </a>
+            // 字符动画序列
+            const text = this.innerText;
+            this.innerText = '';
             
-            <a href="no-body.html" target="_blank" class="card">
-                <img src="img\7.JPG" alt="毕业照片">
-                <h2>毕业快乐</h2>
-            </a>
-        </div>
-    </div>
+            text.split('').forEach((char, i) => {
+                setTimeout(() => {
+                    const span = document.createElement('span');
+                    span.textContent = char;
+                    span.style.opacity = '0';
+                    span.style.display = 'inline-block';
+                    span.style.transform = 'translateY(20px)';
+                    this.appendChild(span);
+                    
+                    // 字符逐个浮现
+                    setTimeout(() => {
+                        span.style.transition = 'all 0.3s ease';
+                        span.style.opacity = '1';
+                        span.style.transform = 'translateY(0)';
+                    }, 50);
+                }, i * 150);
+            });
+            
+            // 最终跳转
+            setTimeout(() => {
+                this.style.textShadow = '0 0 30px #ff4da6, 0 0 60px #4fc3f7';
+                window.location.href = "main.html";
+            }, text.length * 150 + 500);
+        });
 
-    <!-- 关于我们部分 -->
-    <div class="about-us">
-        <h2>关于我们</h2>
+        // 添加CSS动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: translate(-50%, -50%) scale(1); }
+                100% { transform: translate(-50%, -50%) scale(1.1); 
+                       text-shadow: 0 0 20px #ff4da6; }
+            }
+        `;
+        document.head.appendChild(style);
 
-        <!-- 同学名字 -->
-        <div class="classmates">
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">1. 李想</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">2. 应佑吉</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">3. 陈邦</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">4. 柴炳坤</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">5. 余子恒</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">6. 郑浩宇</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">7. 宋竞航</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">8. 陈俊宇</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">9. 郑浩</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">10. 陈绎涵</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">11. 王懿</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">12. 吴昕宇</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">13. 郑袭轩</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">14. 李渝涵</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">15. 曾竣轩</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">16. 邱相和</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">17. 余家禾</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">18. 陈博宇</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">19. 陈一恺</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">20. 吴子毅</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">21. 章子轩</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">22. 倪荣博</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">23. 何仕轩</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">24. 郑璟雯</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">25. 吴荧月</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">26. 张沁妍</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">27. 舒景灿</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">28. 邱子倩</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">29. 吴丞淑</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">30. 郭欣怡</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">31. 季昕蕾</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">32. 余梦芯</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">33. 姜楠</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">34. 祝婕妤</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">35. 黄雪</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">36. 宋亭洁</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">37. 郑茜绫</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">38. 倪若桐</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">39. 陈思绮</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">40. 詹乔钰</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">41. 王雨馨</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">42. 叶佳慧</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">43. 郑砚芷</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">44. 宋诗涵</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">45. 陆雪</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">46. 邹泽毫</a></div>
-    <div><a href="no-information.html" style="text-decoration: none; color: inherit;">47. 薛冰瑶</a></div>
-    </div>
-
-        <!-- 预留空间 -->
-        <div class="additional-content">
-            <p>这里是预留的空间，你可以在这里添加其他内容。</p>
-        </div>
-
-        <!-- 联系方式 -->
-        <div class="contact-info">
-            <p>提交内容：Chengnan-Nanzhongxue-202208@outlook.com</p>
-            <p>维护联系: chaibingkun2022@outlook.com</p>
-            <p>欢迎提交内容！</p>
-        </div>
-    </div>
-
-    <script src="scripts.js"></script>
+        // 窗口自适应
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
 </body>
 </html>
