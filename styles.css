@@ -1,6 +1,6 @@
 :root {
     --bg-dark: #1a1a1a;
-    --card-bg: #2d2d2d;
+    --card-bg: rgba(45, 45, 45, 0.85);
     --text-light: #e6e6e6;
     --accent-color: #00b4d8;
 }
@@ -13,8 +13,23 @@
 
 body {
     font-family: 'Microsoft YaHei', sans-serif;
-    background-color: var(--bg-dark);
     color: var(--text-light);
+    position: relative;
+    min-height: 100vh;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('img/background.jpg') no-repeat center center;
+    background-size: cover;
+    z-index: -1;
+    filter: blur(3px);
+    opacity: 0.7;
 }
 
 /* 轮播图样式 */
@@ -24,6 +39,8 @@ body {
     overflow: hidden;
     position: relative;
     border-bottom: 3px solid var(--accent-color);
+    backdrop-filter: blur(2px);
+    background-color: rgba(26, 26, 26, 0.5);
 }
 
 .slides {
@@ -47,6 +64,7 @@ body {
 /* 内容区域 */
 .content {
     padding: 80px 20px;
+    position: relative;
 }
 
 .grid-container {
@@ -63,20 +81,22 @@ body {
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid rgba(255,255,255,0.1);
-    opacity: 0; /* 初始状态为透明 */
-    transform: translateY(20px); /* 初始状态向下偏移 */
+    opacity: 0;
+    transform: translateY(20px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    backdrop-filter: blur(5px);
 }
 
 .card.visible {
-    opacity: 1; /* 可见状态 */
-    transform: translateY(0); /* 恢复原位 */
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .card:hover {
     transform: translateY(-8px);
     box-shadow: 0 8px 25px rgba(0,180,216,0.2);
     border-color: var(--accent-color);
+    backdrop-filter: blur(8px);
 }
 
 .card img {
@@ -99,83 +119,153 @@ a {
     display: block;
 }
 
-/* 关于我们部分 */
+/* 关于我们部分 - 已更新同学名字按钮样式 */
 .about-us {
     padding: 80px 20px;
-    background: var(--card-bg);
+    background: rgba(45, 45, 45, 0.85);
     text-align: center;
-    opacity: 0; /* 初始状态为透明 */
-    transform: translateY(20px); /* 初始状态向下偏移 */
+    opacity: 0;
+    transform: translateY(20px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    backdrop-filter: blur(5px);
+    border-top: 1px solid rgba(0,180,216,0.3);
+    border-bottom: 1px solid rgba(0,180,216,0.3);
 }
 
 .about-us.visible {
-    opacity: 1; /* 可见状态 */
-    transform: translateY(0); /* 恢复原位 */
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .about-us h2 {
-    font-size: 2rem; /* 标题字体稍小 */
+    font-size: 2rem;
     margin-bottom: 20px;
     color: var(--text-light);
 }
 
-.about-us p {
-    font-size: 1rem; /* 正文字体稍小 */
+/* 更新后的同学名字网格布局 */
+.classmates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto 30px;
+    padding: 0 20px;
+}
+
+.classmates-grid div {
+    background: rgba(45, 45, 45, 0.7);
+    padding: 12px 15px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.classmates-grid a {
+    text-decoration: none;
     color: var(--text-light);
+    display: block;
+    font-size: 1rem;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.classmates-grid div:hover {
+    background: rgba(0, 180, 216, 0.2);
+    transform: translateY(-2px);
+}
+
+/* 底部文字样式 */
+.footer-text {
+    max-width: 1200px;
+    margin: 40px auto 0;
+    padding: 0 20px;
+    text-align: left;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--text-light);
+}
+
+.footer-text div {
     margin-bottom: 10px;
 }
 
-.classmates {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 四列布局 */
-    gap: 10px;
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: left;
-    font-size: 0.9rem; /* 同学名字字体稍小 */
-}
-
-.additional-content {
-    margin-top: 40px;
-    font-size: 1rem;
-    color: var(--text-light);
-    text-align: left;
-    max-width: 1200px;
-    margin: 20px auto 40px; /* 增加底部间距 */
-}
-
-.contact-info {
-    margin-top: 40px;
-    font-size: 1rem;
-    color: var(--text-light);
-    text-align: center;
-}
-
-/* 修改后的轮播动画 */
+/* 轮播动画 */
 @keyframes slide {
-    0%, 16% { transform: translateX(0); }        /* 第1张 */
-    20%, 36% { transform: translateX(-100%); }   /* 第2张 */
-    40%, 56% { transform: translateX(-200%); }   /* 第3张 */
-    60%, 76% { transform: translateX(-300%); }   /* 第4张 */
-    80%, 96% { transform: translateX(-400%); }   /* 第5张 */
-    100% { transform: translateX(-400%); }       /* 保持最后一张 */
+    0%, 16% { transform: translateX(0); }
+    20%, 36% { transform: translateX(-100%); }
+    40%, 56% { transform: translateX(-200%); }
+    60%, 76% { transform: translateX(-300%); }
+    80%, 96% { transform: translateX(-400%); }
+    100% { transform: translateX(-400%); }
 }
 
-/* 移动设备样式 */
+/* 响应式调整 */
+@media (max-width: 1024px) {
+    .classmates-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .classmates-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+}
+
 @media (max-width: 768px) {
     .carousel {
-        height: 50vh; /* 在移动设备上减少轮播图高度 */
+        height: 50vh;
     }
-
+    
+    .classmates-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+    
+    .classmates-grid div {
+        height: 50px;
+        padding: 10px 12px;
+    }
+    
     .slide img {
-        object-fit: cover; /* 保持图片比例，同时占满整个区域 */
+        object-fit: cover;
         width: 100%;
         height: 100%;
     }
+    
+    .footer-text {
+        font-size: 1.1rem;
+    }
 }
 
-/* 从no-body.html和no-information.html中提取的样式 */
+@media (max-width: 480px) {
+    .classmates-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+    }
+    
+    .classmates-grid div {
+        height: 45px;
+        padding: 8px 10px;
+    }
+    
+    .classmates-grid a {
+        font-size: 0.9rem;
+    }
+    
+    .footer-text {
+        font-size: 1rem;
+    }
+}
+
+/* 其他页面样式 */
 .empty-page {
     margin: 0;
     overflow: hidden;

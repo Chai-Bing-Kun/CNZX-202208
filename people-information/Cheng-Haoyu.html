@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>郑浩宇 - 初中同学名片</title>
+    <style>
+        :root {
+            --bg-dark: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-light: #e6e6e6;
+            --accent-color: #00b4d8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 20px;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 40px auto;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .profile-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .profile-header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,180,216,0.2);
+            border-color: var(--accent-color);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .profile-content {
+            padding: 25px;
+        }
+
+        .profile-section {
+            margin-bottom: 20px;
+        }
+
+        .profile-section h2 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            border-bottom: 1px solid rgba(0,180,216,0.3);
+            padding-bottom: 5px;
+        }
+
+        .profile-section p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--card-bg);
+            color: var(--text-light);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-top: 20px;
+        }
+
+        .back-button:hover {
+            background: var(--accent-color);
+            color: var(--bg-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,180,216,0.3);
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(0,180,216,0.2);
+            color: var(--accent-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header h1 {
+                font-size: 2rem;
+            }
+            
+            .profile-image {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container" id="profile">
+        <div class="profile-header">
+            <h1>郑浩宇</h1>
+            <p>初中八班 · 2022届</p>
+        </div>
+
+        <div class="profile-card">
+            <img src="img/classmate-zhenghaoyu.jpg" alt="郑浩宇" class="profile-image">
+            <div class="profile-content">
+                <div class="profile-section">
+                    <h2>关于我</h2>
+                    <p>我是郑浩宇，初中八班的一员。性格开朗活泼，喜欢交朋友，在班级里担任体育委员，热爱各种体育活动，特别是篮球和跑步。</p>
+                </div>
+
+                <div class="profile-section">
+                    <h2>兴趣爱好</h2>
+                    <span class="tag">篮球</span>
+                    <span class="tag">跑步</span>
+                    <span class="tag">电子游戏</span>
+                    <span class="tag">音乐</span>
+                    <p style="margin-top: 15px;">我是校篮球队的主力队员，曾代表学校参加区级比赛并获得优异成绩。平时也喜欢听音乐，特别是流行和摇滚。</p>
+                </div>
+
+                <div class="profile-section">
+                    <h2>难忘回忆</h2>
+                    <p>最难忘的是初二时的校运会，我在400米比赛中获得了第一名，全班同学为我欢呼的场景至今难忘。</p>
+                    <p>还有初三毕业前的班级聚餐，大家一起唱歌、玩游戏，留下了许多珍贵的照片和回忆。</p>
+                </div>
+
+                <div class="profile-section">
+                    <h2>联系方式</h2>
+                    <p>微信: zhenghaoyu_2022</p>
+                    <p>QQ: 123456789</p>
+                    <p>邮箱: zhenghaoyu@example.com</p>
+                </div>
+            </div>
+        </div>
+
+        <a href="../main.html" class="back-button">返回班级主页</a>
+    </div>
+
+    <script>
+        // 滚动淡入效果
+        document.addEventListener('DOMContentLoaded', function () {
+            const profile = document.getElementById('profile');
+            
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                },
+                {
+                    threshold: 0.1,
+                }
+            );
+
+            observer.observe(profile);
+        });
+    </script>
+</body>
+</html>
