@@ -81,6 +81,13 @@
             width: 100%;
             height: 100%;
         }
+
+        /* 确保在所有设备上加载界面背景都是白色 */
+        @media only screen and (max-width: 768px) {
+            .loading-overlay {
+                background-color: white !important;
+            }
+        }
     </style>
 </head>
 <body>
