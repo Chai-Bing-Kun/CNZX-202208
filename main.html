@@ -6,84 +6,96 @@
     <title>初中生活记忆馆</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* 添加加载动画的样式 */
+        /* 加载动画样式 - 三层结构 */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: white; /* 图层三：白色背景 */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9998; /* 最底层 */
+            background-color: white; /* 白色背景 */
+            z-index: 9997;
         }
         
-        .loading-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 9999; /* 中间层 */
+        .loading-animation-container {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998; /* 图层二 - 动画容器 */
         }
         
         .loading-animation {
-            /* 放大动画尺寸 - 根据视口大小自适应 */
-            width: 90vmin; /* 使用视口较小边的90% */
-            height: 90vmin;
-            max-width: 600px; /* 设置最大尺寸避免过大 */
-            max-height: 600px;
-            margin-bottom: 20px;
-            object-fit: contain; /* 保持原始比例 */
+            width: 70vmin;
+            height: 70vmin;
+            max-width: 500px;
+            max-height: 500px;
+            object-fit: contain;
+            /* 保持原始蓝白色动画不变 */
+        }
+        
+        .progress-container {
+            position: fixed;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999; /* 图层一 - 进度条和文字 */
+            text-align: center;
+            width: 100%;
         }
         
         .progress-text {
             font-size: 24px;
             font-weight: bold;
-            color: #333;
+            color: #333; /* 深灰色文字 */
             margin-bottom: 15px;
             font-family: 'Arial', sans-serif;
-            z-index: 10000; /* 最上层 */
-            position: relative; /* 确保z-index生效 */
         }
         
         .progress-bar {
             width: 300px;
-            height: 10px;
-            background-color: #f0f0f0;
-            border-radius: 5px;
+            max-width: 80%;
+            height: 8px;
+            background-color: #f0f0f0; /* 浅灰色轨道 */
+            border-radius: 4px;
             overflow: hidden;
-            z-index: 10000; /* 最上层 */
-            position: relative; /* 确保z-index生效 */
+            margin: 0 auto;
         }
         
         .progress-bar-fill {
             height: 100%;
-            background-color: #4CAF50;
+            background: linear-gradient(90deg, #4a8fe7, #6e45e2); /* 蓝色到紫色的渐变 */
             width: 0%;
             transition: width 0.3s ease;
-            border-radius: 5px;
+            border-radius: 4px;
+        }
+
+        /* 禁止滚动的样式 */
+        body.loading {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
-    <!-- 加载动画层 -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-container">
-            <img src="img/loading10.gif" alt="加载中..." class="loading-animation" id="loadingAnimation">
-            <div class="progress-text" id="progressText">0%</div>
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="progressBar"></div>
-            </div>
+    <!-- 加载动画层 - 三层结构 -->
+    <div class="loading-overlay" id="loadingOverlay"></div>
+    <div class="loading-animation-container">
+        <img src="img/loading10.gif" alt="加载中..." class="loading-animation" id="loadingAnimation">
+    </div>
+    <div class="progress-container">
+        <div class="progress-text" id="progressText">0%</div>
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progressBar"></div>
         </div>
     </div>
 
-    <!-- 页面内容保持不变 -->
     <!-- 轮播图区域 -->
     <div class="carousel">
         <div class="slides">
@@ -201,8 +213,37 @@
 
     <script src="scripts.js"></script>
     <script>
+        // 禁止滚动的函数
+        function disableScroll() {
+            document.body.classList.add('loading');
+            document.addEventListener('wheel', preventDefault, { passive: false });
+            document.addEventListener('touchmove', preventDefault, { passive: false });
+            document.addEventListener('keydown', preventScrollKeys, { passive: false });
+        }
+
+        // 恢复滚动的函数
+        function enableScroll() {
+            document.body.classList.remove('loading');
+            document.removeEventListener('wheel', preventDefault);
+            document.removeEventListener('touchmove', preventDefault);
+            document.removeEventListener('keydown', preventScrollKeys);
+        }
+
+        function preventDefault(e) {
+            e.preventDefault();
+        }
+
+        function preventScrollKeys(e) {
+            const keys = ['Space', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown'];
+            if (keys.includes(e.code)) {
+                e.preventDefault();
+            }
+        }
+
         // 模拟加载进度
         function simulateLoading() {
+            disableScroll();
+            
             var progress = 0;
             var progressText = document.getElementById('progressText');
             var progressBar = document.getElementById('progressBar');
@@ -213,7 +254,6 @@
                     progress = 100;
                     clearInterval(interval);
                     
-                    // 确保页面完全加载后才会隐藏加载界面
                     if (document.readyState === 'complete') {
                         hideLoading();
                     } else {
@@ -223,27 +263,36 @@
                 
                 progressText.textContent = Math.min(Math.round(progress), 100) + '%';
                 progressBar.style.width = Math.min(progress, 100) + '%';
+                
+                // 动态改变颜色
+                if (progress < 50) {
+                    progressBar.style.background = `linear-gradient(90deg, #4a8fe7, #4a8fe7 ${progress*2}%, #6e45e2 0%)`;
+                }
             }, 300);
         }
         
         function hideLoading() {
             var loadingOverlay = document.getElementById('loadingOverlay');
-            var loadingContainer = document.querySelector('.loading-container');
+            var loadingContainer = document.querySelector('.loading-animation-container');
+            var progressContainer = document.querySelector('.progress-container');
             
-            // 添加淡出效果
-            loadingOverlay.style.transition = 'opacity 0.5s ease';
-            loadingContainer.style.transition = 'opacity 0.5s ease';
+            loadingOverlay.style.transition = 'opacity 0.8s ease';
+            loadingContainer.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            progressContainer.style.transition = 'opacity 0.8s ease';
             
             loadingOverlay.style.opacity = '0';
             loadingContainer.style.opacity = '0';
+            loadingContainer.style.transform = 'translate(-50%, -50%) scale(0.95)';
+            progressContainer.style.opacity = '0';
             
-            // 动画结束后移除元素
             setTimeout(function() {
                 loadingOverlay.remove();
-            }, 500);
+                loadingContainer.remove();
+                progressContainer.remove();
+                enableScroll();
+            }, 800);
         }
         
-        // 开始模拟加载进度
         document.addEventListener('DOMContentLoaded', simulateLoading);
     </script>
 </body>
