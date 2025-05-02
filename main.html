@@ -13,28 +13,77 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: white;
+            background-color: white; /* 图层三：白色背景 */
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
+            z-index: 9998; /* 最底层 */
         }
         
-        .loading-animation {
-            z-index: 10000;
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 9999; /* 中间层 */
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+        }
+        
+        .loading-animation {
+            /* 放大动画尺寸 - 根据视口大小自适应 */
+            width: 90vmin; /* 使用视口较小边的90% */
+            height: 90vmin;
+            max-width: 600px; /* 设置最大尺寸避免过大 */
+            max-height: 600px;
+            margin-bottom: 20px;
+            object-fit: contain; /* 保持原始比例 */
+        }
+        
+        .progress-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            font-family: 'Arial', sans-serif;
+            z-index: 10000; /* 最上层 */
+            position: relative; /* 确保z-index生效 */
+        }
+        
+        .progress-bar {
+            width: 300px;
+            height: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            overflow: hidden;
+            z-index: 10000; /* 最上层 */
+            position: relative; /* 确保z-index生效 */
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
     <!-- 加载动画层 -->
     <div class="loading-overlay" id="loadingOverlay">
-        <img src="img/loading10.gif" alt="加载中..." class="loading-animation" id="loadingAnimation">
+        <div class="loading-container">
+            <img src="img/loading10.gif" alt="加载中..." class="loading-animation" id="loadingAnimation">
+            <div class="progress-text" id="progressText">0%</div>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+        </div>
     </div>
 
+    <!-- 页面内容保持不变 -->
     <!-- 轮播图区域 -->
     <div class="carousel">
         <div class="slides">
@@ -152,24 +201,50 @@
 
     <script src="scripts.js"></script>
     <script>
-        // 页面加载完成后隐藏加载动画
-        window.addEventListener('load', function() {
+        // 模拟加载进度
+        function simulateLoading() {
+            var progress = 0;
+            var progressText = document.getElementById('progressText');
+            var progressBar = document.getElementById('progressBar');
+            
+            var interval = setInterval(function() {
+                progress += Math.random() * 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // 确保页面完全加载后才会隐藏加载界面
+                    if (document.readyState === 'complete') {
+                        hideLoading();
+                    } else {
+                        window.addEventListener('load', hideLoading);
+                    }
+                }
+                
+                progressText.textContent = Math.min(Math.round(progress), 100) + '%';
+                progressBar.style.width = Math.min(progress, 100) + '%';
+            }, 300);
+        }
+        
+        function hideLoading() {
             var loadingOverlay = document.getElementById('loadingOverlay');
-            var loadingAnimation = document.getElementById('loadingAnimation');
+            var loadingContainer = document.querySelector('.loading-container');
             
             // 添加淡出效果
             loadingOverlay.style.transition = 'opacity 0.5s ease';
-            loadingAnimation.style.transition = 'opacity 0.5s ease';
+            loadingContainer.style.transition = 'opacity 0.5s ease';
             
             loadingOverlay.style.opacity = '0';
-            loadingAnimation.style.opacity = '0';
+            loadingContainer.style.opacity = '0';
             
             // 动画结束后移除元素
             setTimeout(function() {
                 loadingOverlay.remove();
-                loadingAnimation.remove();
             }, 500);
-        });
+        }
+        
+        // 开始模拟加载进度
+        document.addEventListener('DOMContentLoaded', simulateLoading);
     </script>
 </body>
 </html>
