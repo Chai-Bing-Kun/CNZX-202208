@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>词云</title>
+    <script src="cloud.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #e0e0e0;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #word-cloud {
+            width: 100%;
+            height: 100%;
+        }
+        
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            max-width: 80%;
+            display: none;
+            z-index: 10;
+        }
+        
+        #message h1 {
+            font-size: 2.5em;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        #return-link {
+            font-size: 0.8em;
+            color: #aaa;
+            cursor: pointer;
+            margin-top: 30px;
+            text-decoration: underline;
+        }
+        
+        #title {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 2em;
+            color: #e0e0e0;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="title"> </div>
+        <div id="word-cloud"></div>
+        <div id="message">
+            <h1 id="blessing-text"></h1>
+            <div id="return-link">点击返回词云</div>
+        </div>
+    </div>
+
+    <script>
+        // 毕业祝福词语（增加到100个）
+        const words = [
+            { text: "毕业快乐", size: 60, color: "#ffffff" },
+            { text: "前程似锦", size: 58, color: "#dddddd" },
+            { text: "未来可期", size: 58, color: "#bbbbbb" },
+            { text: "梦想成真", size: 44, color: "#aaaaaa" },
+            { text: "一帆风顺", size: 42, color: "#999999" },
+            { text: "学业有成", size: 40, color: "#888888" },
+            { text: "事业腾飞", size: 38, color: "#777777" },
+            { text: "青春无悔", size: 36, color: "#666666" },
+            { text: "友谊长存", size: 34, color: "#555555" },
+            { text: "感恩师长", size: 32, color: "#444444" },
+            { text: "勇敢追梦", size: 30, color: "#333333" },
+            { text: "不忘初心", size: 28, color: "#222222" },
+            { text: "展翅高飞", size: 36, color: "#ffffff" },
+            { text: "才华横溢", size: 34, color: "#dddddd" },
+            { text: "心想事成", size: 30, color: "#bbbbbb" },
+            { text: "鹏程万里", size: 25, color: "#aaaaaa" },
+            { text: "锦绣前程", size: 18, color: "#999999" },
+            { text: "功成名就", size: 16, color: "#888888" },
+            { text: "学无止境", size: 14, color: "#777777" },
+            { text: "厚德载物", size: 12, color: "#666666" },
+            { text: "自强不息", size: 10, color: "#555555" },
+            { text: "天道酬勤", size: 18, color: "#444444" },
+            { text: "志存高远", size: 16, color: "#333333" },
+            { text: "海阔天空", size: 10, color: "#222222" },
+            { text: "扬帆起航", size: 19, color: "#111111" },
+            { text: "金榜题名", size: 18, color: "#ffffff" },
+            { text: "桃李芬芳", size: 16, color: "#dddddd" },
+            { text: "春风化雨", size: 14, color: "#bbbbbb" },
+            { text: "德才兼备", size: 12, color: "#aaaaaa" },
+            { text: "继往开来", size: 10, color: "#999999" },
+            { text: "出类拔萃", size: 20, color: "#888888" },
+            { text: "卓尔不群", size: 19, color: "#777777" },
+            { text: "大展宏图", size: 19, color: "#666666" },
+            { text: "光耀门楣", size: 22, color: "#555555" },
+            { text: "青云直上", size: 18, color: "#444444" },
+            { text: "龙腾虎跃", size: 16, color: "#333333" },
+            { text: "鱼跃龙门", size: 14, color: "#222222" },
+            { text: "才高八斗", size: 12, color: "#111111" },
+            { text: "学富五车", size: 10, color: "#ffffff" },
+            { text: "金玉满堂", size: 8, color: "#dddddd" },
+            { text: "辉煌人生", size: 16, color: "#bbbbbb" },
+            { text: "智慧之光", size: 14, color: "#aaaaaa" },
+            { text: "才华出众", size: 12, color: "#999999" },
+            { text: "前途无量", size: 10, color: "#888888" },
+            { text: "步步高升", size: 8, color: "#777777" },
+            { text: "幸福安康", size: 6, color: "#666666" },
+            { text: "快乐成长", size: 7, color: "#555555" },
+            { text: "心想事成", size: 17, color: "#444444" },
+            { text: "美梦成真", size: 18, color: "#333333" },
+            { text: "才华洋溢", size: 16, color: "#222222" },
+            { text: "智慧超群", size: 14, color: "#111111" },
+            { text: "学业精进", size: 12, color: "#ffffff" },
+            { text: "事业有成", size: 10, color: "#dddddd" },
+            { text: "家庭幸福", size: 19, color: "#bbbbbb" },
+            { text: "健康平安", size: 19, color: "#aaaaaa" },
+            { text: "快乐无忧", size: 4, color: "#999999" },
+            { text: "财源广进", size: 21, color: "#888888" },
+            { text: "幸福美满", size: 18, color: "#777777" },
+            { text: "快乐无限", size: 16, color: "#666666" },
+            { text: "智慧如海", size: 14, color: "#555555" },
+            { text: "才华斐然", size: 12, color: "#444444" },
+            { text: "学业进步", size: 40, color: "#333333" },
+            { text: "事业辉煌", size: 12, color: "#222222" },
+            { text: "家庭和睦", size: 16, color: "#111111" },
+            { text: "健康长寿", size: 14, color: "#ffffff" },
+            { text: "快乐常伴", size: 12, color: "#dddddd" },
+            { text: "财源滚滚", size: 18, color: "#bbbbbb" },
+            { text: "幸福永恒", size: 16, color: "#aaaaaa" },
+            { text: "快乐无边", size: 14, color: "#999999" },
+            { text: "智慧无限", size: 12, color: "#888888" },
+            { text: "才华盖世", size: 22, color: "#777777" },
+            { text: "学业优秀", size: 28, color: "#666666" },
+            { text: "事业腾达", size: 16, color: "#555555" },
+            { text: "家庭温馨", size: 14, color: "#444444" },
+            { text: "健康如意", size: 60, color: "#333333" },
+            { text: "快乐永远", size: 18, color: "#222222" },
+            { text: "财源茂盛", size: 16, color: "#111111" },
+            { text: "幸福安康", size: 14, color: "#ffffff" },
+            { text: "快乐成长", size: 12, color: "#dddddd" },
+            { text: "智慧超群", size: 10, color: "#bbbbbb" },
+            { text: "才华横溢", size: 16, color: "#aaaaaa" },
+            { text: "学业有成", size: 19, color: "#999999" },
+            { text: "事业成功", size: 18, color: "#888888" },
+            { text: "家庭美满", size: 22, color: "#777777" },
+            { text: "健康快乐", size: 18, color: "#666666" },
+            { text: "快乐幸福", size: 16, color: "#555555" },
+            { text: "智慧人生", size: 14, color: "#444444" },
+            { text: "才华出众", size: 12, color: "#333333" },
+            { text: "学业进步", size: 10, color: "#222222" },
+            { text: "事业辉煌", size: 18, color: "#111111" },
+            { text: "家庭幸福", size: 16, color: "#ffffff" },
+            { text: "健康平安", size: 14, color: "#dddddd" },
+            { text: "快乐无忧", size: 12, color: "#bbbbbb" }
+        ];
+
+        // 毕业祝福语
+        const blessings = [
+            "愿你在人生的新征程中，如雄鹰展翅，翱翔于广阔天空！",
+            "毕业不是终点，而是新的起点，愿你以梦为马，不负韶华！",
+            "四年的耕耘，终有收获；未来的道路，必将更加辉煌！",
+            "愿你带着母校的祝福，在人生的舞台上绽放最耀眼的光芒！",
+            "今天的离别是为了明天更好的相聚，愿你前程似锦，归来仍是少年！",
+            "愿你在未来的日子里，保持热爱，奔赴山海，创造属于自己的精彩人生！",
+            "毕业快乐！愿你以智慧、勇气和毅力，书写人生新的篇章！",
+            "愿你的未来如星辰大海般广阔，如旭日东升般充满希望！",
+            "带着梦想出发吧，愿你在追梦的路上永远保持热情与坚定！",
+            "毕业是人生的重要里程碑，愿你在新的征程中继续闪耀！",
+            "愿你像颗种子，勇敢地冲破泥沙，将嫩绿的幼芽伸出地面，指向天空！",
+            "愿你是一棵树：春天，吐一山淡淡的香味；夏天，洒一抹如泉的凉荫；秋天，举一树甜甜的青果；冬天，做一个养精蓄锐的好梦！",
+            "愿你像那小小的溪流，将那高高的山峰作为生命的起点，一路跳跃，一路奔腾，勇敢地奔向生活的大海！",
+            "愿你在这短暂的学习时日里，获得高超的本领、顽强的意志、博大的胸怀；像赛马一般，越过一道又一道高栏；让生命扬帆前进，驶向碧波滔滔的大海！",
+            "愿你插上一对有力的翅膀，坚韧地飞吧，不要为风雨所折服；诚挚地飞吧，不要为香甜的蜜汁所陶醉。朝着明确的目标，飞向美好的未来！",
+            "愿你是一叶执著的小舟，载着希望的梦幻，驶向辽阔的海洋；愿你是一艘坚强的船，剪开蓝色的波澜，驶向成功的彼岸！",
+            "愿你在这多彩的世界里，拥有绚丽的人生；愿你永远保持此刻的纯真与热情，拥抱未来的每一天！",
+            "愿你是风，鼓起白色的帆；愿你是船，剪开蓝色的波澜。生活正在你的前方微笑，勇敢地走上前去，将彩色的人生拥抱！"
+        ];
+
+        // 初始化Three.js场景
+        let scene, camera, renderer, wordObjects = [];
+        const container = document.getElementById('word-cloud');
+        
+        function init() {
+            // 创建场景
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000000);
+            
+            // 创建相机
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 445; // 保持相机位置不变
+            
+            // 创建渲染器
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+            
+            // 创建词云
+            createWordCloud();
+            
+            // 添加事件监听
+            window.addEventListener('resize', onWindowResize);
+            renderer.domElement.addEventListener('click', onWordClick, false);
+            
+            // 开始动画
+            animate();
+        }
+        
+        function createWordCloud() {
+            const radius = 300; // 保持球体半径不变
+            const phi = Math.PI * (3 - Math.sqrt(5)); // 黄金角度
+            
+            for (let i = 0; i < words.length; i++) {
+                const word = words[i];
+                
+                // 创建文本纹理
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                const fontSize = word.size;
+                const font = `${fontSize}px Arial`;
+                
+                context.font = font;
+                const textWidth = context.measureText(word.text).width;
+                
+                canvas.width = textWidth + 10;
+                canvas.height = fontSize * 1.5;
+                
+                context.font = font;
+                context.fillStyle = word.color;
+                context.textAlign = 'center';
+                context.textBaseline = 'middle';
+                context.fillText(word.text, canvas.width / 2, canvas.height / 2);
+                
+                // 创建材质
+                const texture = new THREE.CanvasTexture(canvas);
+                const material = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    transparent: true,
+                    side: THREE.DoubleSide
+                });
+                
+                // 创建平面几何体
+                const geometry = new THREE.PlaneGeometry(canvas.width / 3, canvas.height / 3);
+                const mesh = new THREE.Mesh(geometry, material);
+                
+                // 计算球面上的位置
+                const y = 1 - (i / words.length) * 2;
+                const radiusAtY = Math.sqrt(1 - y * y) * radius;
+                const theta = phi * i;
+                
+                mesh.position.x = radiusAtY * Math.cos(theta);
+                mesh.position.y = y * radius;
+                mesh.position.z = radiusAtY * Math.sin(theta);
+                
+                // 使文字始终朝向相机
+                mesh.lookAt(camera.position);
+                
+                // 存储文字信息
+                mesh.userData = {
+                    text: word.text,
+                    originalPosition: mesh.position.clone(),
+                    originalScale: mesh.scale.clone()
+                };
+                
+                scene.add(mesh);
+                wordObjects.push(mesh);
+            }
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function onWordClick(event) {
+            // 计算点击位置
+            const mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            // 创建射线
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+            
+            // 检测相交
+            const intersects = raycaster.intersectObjects(wordObjects);
+            
+            if (intersects.length > 0) {
+                const clickedWord = intersects[0].object;
+                showBlessing(clickedWord.userData.text);
+            }
+        }
+        
+        function showBlessing(word) {
+            // 隐藏词云
+            container.style.display = 'none';
+            
+            // 随机选择一条祝福语
+            const randomBlessing = blessings[Math.floor(Math.random() * blessings.length)];
+            
+            // 显示祝福语
+            document.getElementById('blessing-text').textContent = randomBlessing;
+            document.getElementById('message').style.display = 'block';
+            
+            // 设置返回链接事件
+            document.getElementById('return-link').onclick = function() {
+                container.style.display = 'block';
+                document.getElementById('message').style.display = 'none';
+            };
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // 旋转词云
+            wordObjects.forEach(word => {
+                word.position.applyAxisAngle(new THREE.Vector3(0, 1, 0), 0.002);
+                word.lookAt(camera.position);
+            });
+            
+            renderer.render(scene, camera);
+        }
+        
+        // 初始化
+        init();
+    </script>
+</body>
+</html>
