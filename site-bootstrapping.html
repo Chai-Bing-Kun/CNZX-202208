@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站引导</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn {
+            padding: 12px 20px;
+            background-color: #4285f4;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            text-align: center;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #3367d6;
+        }
+        .recommended::before {
+            content: "【推荐】";
+            color: #0f9d58;
+            font-weight: bold;
+        }
+        /* 帮助区域预留样式 */
+        #help-area {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f0f7ff;
+            border: 1px dashed #4285f4;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>欢迎访问</h1>
+        
+        <div class="button-group">
+            <a href="#" class="btn" id="cnzx-btn">CNZX</a>
+            <a href="https://help" class="btn" id="help-btn">帮助</a>
+        </div>
+        
+        <div id="help-area">
+            <p>为防止出现因为网站问题无法访问网站，使用该网站引导内容进行访问。</p>
+        </div>
+        
+        <!-- CNZX引导内容将在这里动态显示 -->
+        <div id="cnzx-guide" style="display: none; margin-top: 30px;"></div>
+    </div>
+
+    <script>
+        // 检测网络速度（简化版）
+        function checkNetworkSpeed() {
+            const startTime = performance.now();
+            return fetch('https://cnzx-202208.pages.dev/', {
+                method: 'HEAD',
+                cache: 'no-store'
+            }).then(() => {
+                const endTime = performance.now();
+                const duration = endTime - startTime;
+                // 假设500ms以下为良好网络
+                return duration < 500;
+            }).catch(() => false);
+        }
+
+        // 检测设备类型
+        function getDeviceType() {
+            const userAgent = navigator.userAgent;
+            if (/android/i.test(userAgent)) {
+                return 'android';
+            }
+            if (/iPad|iPhone|iPod/i.test(userAgent)) {
+                return 'ios';
+            }
+            if (/Win|Mac|Linux/i.test(userAgent)) {
+                return 'desktop';
+            }
+            return 'unknown';
+        }
+
+        // 显示CNZX引导内容
+        function showCNZXGuide() {
+            checkNetworkSpeed().then(isGoodNetwork => {
+                const deviceType = getDeviceType();
+                const guideDiv = document.getElementById('cnzx-guide');
+                let html = '<h2>请选择合适的访问网站，如有问题，请点击帮助按钮</h2><div class="button-group">';
+                
+                if (deviceType === 'android') {
+                    html += `
+                        <a href="https://cnzx-202208.pages.dev/" class="btn ${isGoodNetwork ? 'recommended' : ''}">使用网站（点击进入）</a>
+                        <a href="https://wangzahnyuanma" class="btn ${!isGoodNetwork ? 'recommended' : ''}">下载安卓执行文件（点击下载）</a>
+                    `;
+                } else {
+                    html += `
+                        <a href="https://cnzx-202208.pages.dev/" class="btn ${isGoodNetwork ? 'recommended' : ''}">使用网站（点击进入）</a>
+                        <a href="https://android" class="btn ${!isGoodNetwork ? 'recommended' : ''}">下载网站源码文件（点击下载）</a>
+                    `;
+                }
+                
+                html += '</div>';
+                guideDiv.innerHTML = html;
+                guideDiv.style.display = 'block';
+                
+                // 修改按钮文本为"刷新检测"
+                document.getElementById('cnzx-btn').textContent = '刷新检测';
+            });
+        }
+
+        // 绑定按钮点击事件
+        document.getElementById('cnzx-btn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const guideDiv = document.getElementById('cnzx-guide');
+            
+            // 如果引导内容已显示，则先隐藏再重新检测
+            if (guideDiv.style.display === 'block') {
+                guideDiv.style.display = 'none';
+                setTimeout(showCNZXGuide, 300); // 添加短暂延迟使过渡更自然
+            } else {
+                showCNZXGuide();
+            }
+        });
+    </script>
+</body>
+</html>
