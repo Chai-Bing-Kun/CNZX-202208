@@ -28,7 +28,7 @@
             to { opacity: 1; }
         }
         
-        /* 横屏提示样式 */
+        /* 修改后的横屏提示样式 */
         #rotate-message {
             display: none;
             position: fixed;
@@ -36,8 +36,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 200;
+            background-color: #000;
+            z-index: 9999;
             color: white;
             font-family: 'Microsoft YaHei', sans-serif;
             text-align: center;
@@ -73,17 +73,17 @@
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
         
-        // 检测屏幕方向
+        // 修改后的检测屏幕方向函数
         function checkOrientation() {
             const isPortrait = window.innerHeight > window.innerWidth;
             const rotateMessage = document.getElementById('rotate-message');
             
             if (isMobileDevice() && isPortrait) {
                 rotateMessage.style.display = 'block';
-                document.getElementById('portal-text').style.opacity = '0';
+                document.body.style.overflow = 'hidden';
             } else {
                 rotateMessage.style.display = 'none';
-                document.getElementById('portal-text').style.opacity = '1';
+                document.body.style.overflow = 'auto';
             }
         }
         
@@ -91,14 +91,14 @@
         window.addEventListener('load', checkOrientation);
         window.addEventListener('resize', checkOrientation);
 
-        // Three.js初始化代码（保持原有星云背景）
+        // Three.js初始化代码
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // 创建粒子星云（简化版）
+        // 创建粒子星云
         const particles = new THREE.BufferGeometry();
         const positions = new Float32Array(2000 * 3);
         for (let i = 0; i < 2000; i++) {
@@ -130,7 +130,7 @@
         // 点击动画
         document.getElementById('portal-text').addEventListener('click', function() {
             this.style.animation = 'none';
-            this.offsetHeight; // 触发重绘
+            this.offsetHeight;
             this.style.animation = 'pulse 1.5s infinite alternate';
             
             // 字符动画序列
@@ -178,6 +178,7 @@
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
+            checkOrientation(); // 确保旋转检测在窗口大小改变时也执行
         });
     </script>
 </body>
