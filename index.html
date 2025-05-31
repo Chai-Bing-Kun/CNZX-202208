@@ -13,7 +13,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-family: 'YouYuan', 'Microsoft YaHei', sans-serif; /* 主要使用幼圆字体 */
+            font-family: 'YouYuan', 'Microsoft YaHei', sans-serif;
             font-size: 5em;
             letter-spacing: 0.2em;
             color: #f8f8ff;
@@ -27,14 +27,70 @@
         @keyframes fadeIn {
             to { opacity: 1; }
         }
+        
+        /* 横屏提示样式 */
+        #rotate-message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            color: white;
+            font-family: 'Microsoft YaHei', sans-serif;
+            text-align: center;
+            padding-top: 30vh;
+            box-sizing: border-box;
+        }
+        #rotate-message h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        #rotate-message .rotate-icon {
+            font-size: 3em;
+            animation: rotateAnimation 2s infinite;
+        }
+        @keyframes rotateAnimation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(90deg); }
+        }
     </style>
-    <!-- 加载微软雅黑作为备选，中文用户通常自带幼圆字体 -->
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
 </head>
 <body>
     <div id="portal-text">进入世界</div>
+    <div id="rotate-message">
+        <h2>为了更好的体验</h2>
+        <div class="rotate-icon">↻</div>
+        <p>请将手机旋转至横屏模式</p>
+    </div>
 
     <script>
+        // 检测是否为移动设备
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        
+        // 检测屏幕方向
+        function checkOrientation() {
+            const isPortrait = window.innerHeight > window.innerWidth;
+            const rotateMessage = document.getElementById('rotate-message');
+            
+            if (isMobileDevice() && isPortrait) {
+                rotateMessage.style.display = 'block';
+                document.getElementById('portal-text').style.opacity = '0';
+            } else {
+                rotateMessage.style.display = 'none';
+                document.getElementById('portal-text').style.opacity = '1';
+            }
+        }
+        
+        // 页面加载时和窗口大小改变时检查方向
+        window.addEventListener('load', checkOrientation);
+        window.addEventListener('resize', checkOrientation);
+
         // Three.js初始化代码（保持原有星云背景）
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);

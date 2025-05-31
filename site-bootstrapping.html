@@ -64,7 +64,7 @@
         </div>
         
         <div id="help-area">
-            <p>为防止出现因为网站问题无法访问网站，使用该网站引导内容进行访问。</p>
+            <p>为防止出现因为网站问题无法访问网站，使用该网站引导内容进行访问</p>
         </div>
         
         <!-- CNZX引导内容将在这里动态显示 -->
@@ -81,8 +81,8 @@
             }).then(() => {
                 const endTime = performance.now();
                 const duration = endTime - startTime;
-                // 假设500ms以下为良好网络
-                return duration < 500;
+                // 300ms以下为良好网络
+                return duration < 300;
             }).catch(() => false);
         }
 
@@ -108,15 +108,20 @@
                 const guideDiv = document.getElementById('cnzx-guide');
                 let html = '<h2>请选择合适的访问网站，如有问题，请点击帮助按钮</h2><div class="button-group">';
                 
-                if (deviceType === 'android') {
+                if (deviceType === 'ios') {
+                    // iOS设备只显示一个选项
+                    html += `
+                        <a href="https://cnzx-202208.pages.dev/" class="btn recommended">使用网站（点击进入）</a>
+                    `;
+                } else if (deviceType === 'android') {
                     html += `
                         <a href="https://cnzx-202208.pages.dev/" class="btn ${isGoodNetwork ? 'recommended' : ''}">使用网站（点击进入）</a>
-                        <a href="https://wangzahnyuanma" class="btn ${!isGoodNetwork ? 'recommended' : ''}">下载安卓执行文件（点击下载）</a>
+                        <a href="https://gh.b52m.cn/https://github.com/Chai-Bing-Kun/CNZX-202208/releases/download/v.2025.05.30/CNZX-html.zip" class="btn ${!isGoodNetwork ? 'recommended' : ''}">下载安卓执行文件（点击下载）</a>
                     `;
                 } else {
                     html += `
                         <a href="https://cnzx-202208.pages.dev/" class="btn ${isGoodNetwork ? 'recommended' : ''}">使用网站（点击进入）</a>
-                        <a href="https://android" class="btn ${!isGoodNetwork ? 'recommended' : ''}">下载网站源码文件（点击下载）</a>
+                        <a href="https://gh.b52m.cn/https://github.com/Chai-Bing-Kun/CNZX-202208/releases/download/v.2025.05.30/H53B103D3__20250530194708.apk" class="btn ${!isGoodNetwork ? 'recommended' : ''}">下载网站源码文件（点击下载）</a>
                     `;
                 }
                 
