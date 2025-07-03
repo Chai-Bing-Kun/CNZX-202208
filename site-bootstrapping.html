@@ -60,7 +60,7 @@
         
         <div class="button-group">
             <a href="#" class="btn" id="cnzx-btn">CNZX</a>
-            <a href="https://help" class="btn" id="help-btn">帮助</a>
+            <a href="https://help" class="btn" id="help-btn">帮助（暂未开启）</a>
         </div>
         
         <div id="help-area">
@@ -106,7 +106,7 @@
             checkNetworkSpeed().then(isGoodNetwork => {
                 const deviceType = getDeviceType();
                 const guideDiv = document.getElementById('cnzx-guide');
-                let html = '<h2>请选择合适的访问网站，如有问题，请点击帮助按钮</h2><div class="button-group">';
+                let html = '<h2>请选择合适的访问网站，如有问题，请点击帮助按钮（帮助功能暂未上线）</h2><div class="button-group">';
                 
                 if (deviceType === 'ios') {
                     // iOS设备只显示一个选项
