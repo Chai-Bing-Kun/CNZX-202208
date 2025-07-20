@@ -54,7 +54,7 @@
 
     <script>
         // 网络检测函数（保持原样）
-        function checkNetworkSpeed(){const e=performance.now();return fetch('https://cnzx-202208.pages.dev/',{method:'HEAD',cache:'no-store'}).then(()=>performance.now()-e<300).catch(()=>!1)}
+        function checkNetworkSpeed(){const e=performance.now();return fetch('https://cn-202208.pages.dev/',{method:'HEAD',cache:'no-store'}).then(()=>performance.now()-e<300).catch(()=>!1)}
         
         // 设备检测函数（保持原样）
         function getDeviceType(){const e=navigator.userAgent;return/android/i.test(e)?"android":/iPad|iPhone|iPod/i.test(e)?"ios":/Win|Mac|Linux/i.test(e)?"desktop":"unknown"}
