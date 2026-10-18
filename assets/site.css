@@ -788,6 +788,7 @@ img {
   margin: 2px 0;
   font-size: 0.88rem;
   color: rgba(216, 211, 196, 0.76);
+  overflow-wrap: anywhere;
 }
 
 .foot a {

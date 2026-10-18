@@ -29,8 +29,7 @@ img/（原图，2 GB 级，不入库）
 | `album.html?id=<id>` | 单本相册。瀑布流「照片纸」布局，点开进灯箱，支持 ← → 与 Esc。 |
 | `word-clouds/word-clouds.html` | 3D 毕业祝福词云（沿用旧页）。 |
 | `no-information.html` / `no-body.html` | 两个占位页，已改成新设计语言。 |
-| `index.html` → `引导.html` → `portal.html` → `main.html` | 旧的三段式入口（设备检测 / 粒子星云），保留原样。 |
-| `happy-times/happy-time.html` | 旧的 100 张幻灯片相册，图源目录已空，**已成孤儿页**。 |
+| `index.html` | 入口，直接 `location.replace('./main.html')`，一站到底。 |
 
 ### 资源
 
@@ -40,7 +39,7 @@ img/（原图，2 GB 级，不入库）
 | `assets/site.js` | 数据读取、相册/照片渲染、分块加载（每次 48 张）、灯箱。 |
 | `tools/build_photos.py` | 图片压缩 + 清单生成脚本（下面详述）。 |
 | `photos/` | **构建产物**，脚本生成，随站点一起发布。 |
-| `styles.css` / `scripts.js` | 旧全站样式与滚动淡入脚本，新页面已不引用。 |
+| `photos/.cache.json` | 增量构建缓存（不进版本库）。 |
 
 ---
 
@@ -113,8 +112,9 @@ py -3 -m http.server 8866
 
 - `photos/` 目录体积不小，首次构建要跑十几分钟；之后再跑是增量，很快。
 - 照片目前 `alt=""`（没有内容描述），需要无障碍时可后续补。
-- 空目录 `happy-times/img-happy-time/` 是历史遗留。
 - `同学总名字临时存储.txt` 是 47 人名单的原始片段，名录已固化在 `main.html`。
+- 旧的 `styles.css` / `scripts.js` / `happy-times/` / 三段式入口页已删除；
+  原来引导页里的离线压缩包与安卓 APP 下载链接，挪到了首页页脚。
 
 ---
 
