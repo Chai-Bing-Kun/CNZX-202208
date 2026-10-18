@@ -15,7 +15,7 @@ img/（原图，2 GB 级，不入库）
    └─ tools/build_photos.py  ──▶  photos/（WebP 三档 + albums.json）
                                       └─▶ main.html / gallery.html / album.html
 
-messages/messages.json（手写）──▶ messages.html（留言墙，关键词云 + 纸条）
+word-clouds/word-clouds.html（纯前端）──▶ 旋转词球，点词抽一句随机祝福
 ```
 
 页面本身不含任何照片清单，全部由 `photos/albums.json` 驱动。加照片只需要丢进 `img/<相册>/` 再跑一次脚本。
@@ -29,7 +29,7 @@ messages/messages.json（手写）──▶ messages.html（留言墙，关键�
 | `main.html` | 新首页。报头 + 统计 + 「最近拍的」六张 + 47 位同学名录。 |
 | `gallery.html` | 相册总览。按拍摄时间列出全部相册（封面、张数、日期区间）。 |
 | `album.html?id=<id>` | 单本相册。瀑布流「照片纸」布局，点开进灯箱，支持 ← → 与 Esc。 |
-| `messages.html` | 留言墙。关键词云 + 纸条式留言 + 写信（本地草稿，邮件发出，无后端）。 |
+| `word-clouds/word-clouds.html` | 祝福词云。93 个词排成一个旋转的球面，点任意一个词弹出随机祝福。 |
 | `no-information.html` / `no-body.html` | 两个占位页，已改成新设计语言。 |
 | `index.html` | 入口，直接 `location.replace('./main.html')`，一站到底。 |
 
@@ -39,33 +39,25 @@ messages/messages.json（手写）──▶ messages.html（留言墙，关键�
 | --- | --- |
 | `assets/site.css` | 新设计系统：牛皮纸 + 装订孔 + 胶带照片，全部尺寸在 `:root` 变量里。 |
 | `assets/site.js` | 数据读取、相册/照片渲染、分块加载（每次 48 张）、灯箱。 |
-| `assets/messages.css` / `assets/messages.js` | 留言页专用样式与渲染（关键词统计、筛选、草稿、mailto）。 |
-| `messages/messages.json` | 留言数据源，人手编辑，一条一个对象（字段见下）。 |
+| `assets/cloud.css` / `assets/cloud.js` | 词球专用样式与渲染（斐波那契球面、透视投影、拖拽旋转、祝福词表）。 |
 | `tools/build_photos.py` | 图片压缩 + 清单生成脚本（下面详述）。 |
 | `photos/` | **构建产物**，脚本生成，随站点一起发布。 |
 | `photos/.cache.json` | 增量构建缓存（不进版本库）。 |
 
 ---
 
-## 留言
+## 词云
 
-`messages/messages.json` 是唯一的数据源，改完推上去就生效，不需要构建：
+`word-clouds/word-clouds.html` 是一个**不存任何数据**的页面：词表和祝福语都写死在 `assets/cloud.js` 里，
+所以它不会冒出一条「看起来像某个人说的」留言。
 
-```json
-{ "updated": "2026-10-18",
-  "messages": [
-    { "id": "m13", "n": "匿名", "s": "", "d": "2026-09-30",
-      "t": "正文……", "tags": ["毕业", "运动会"] }
-  ] }
-```
+- 93 个词用斐波那契球算法均匀铺在单位球面上，每帧绕 Y 轴（再叠一点 X 轴）旋转；
+- 投影是手写透视：`sc = CAM / (CAM + z)`，`CAM = 3.2`，字号、透明度、`z-index` 都按深度插值，近处大而深、远处小而淡；
+- 指针停在某个词上时旋转会暂停，点起来稳定；按下去和松手之间词挪了位置也有兜底（先看落点元素，再找最近的词）；
+- 点词弹出一句随机祝福（18 句，不会连着重复），`再抽一句` 换一句，`Esc` 或 `回到词云` 关掉；
+- 拖拽可以手动转球，松手有一点惯性，之后自动回落到常速；`prefers-reduced-motion` 下完全不转。
 
-- `n` 署名（空着就是匿名）、`s` 座号（可选）、`d` 日期 `YYYY-MM-DD`、`t` 正文、`tags` 关键词；
-- `tags` 不写也行，脚本会拿内置词典（毕业 / 研学 / 运动会 …）从正文里认；
-- 页面按 `d` 倒序排列，关键词云的字号由「被提到几次」算出来，点词即筛选；
-- 全站没有后端、没有统计脚本、没有第三方评论组件；只有署名和座号这两个可选项，留空即匿名。
-
-写入口没有后端：内容存在浏览器 `localStorage` 草稿里，点「生成邮件」走 `mailto:`，
-或点「复制内容」自己粘贴。收到的信要人工贴回 `messages.json`。
+> 字数会变：改 `WORDS` 数组即可，页头「N 个词」是数出来的，不是写死的。
 
 ---
 
@@ -141,7 +133,8 @@ py -3 -m http.server 8866
 - `同学总名字临时存储.txt` 是 47 人名单的原始片段，名录已固化在 `main.html`。
 - 旧的 `styles.css` / `scripts.js` / `happy-times/` / 三段式入口页已删除；
   原来引导页里的离线压缩包与安卓 APP 下载链接，挪到了首页页脚。
-- 旧的 3D 词云页（`word-clouds/`，含 600 KB 的 Three.js）已删除，换成本页 `messages.html`。
+- 词云页不再引 Three.js（原本 600 KB），改成手写的球面 + 透视投影脚本，整个 `cloud.js` 约 13 KB。
+- 曾经的留言墙（`messages.html` + `messages.json`）已删除：那里面的「同学留言」是编造的，不作为纪念站内容保留。
 
 ---
 

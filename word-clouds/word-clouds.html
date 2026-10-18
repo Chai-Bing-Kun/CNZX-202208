@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>词云 · 初中生活记忆馆</title>
+<meta name="description" content="城南中学 2022 届初中八班：一堆祝福词组成一个会转的球，点一个词，抽一句祝福。">
+<link rel="stylesheet" href="../assets/site.css?v=6">
+<link rel="stylesheet" href="../assets/cloud.css?v=2">
+</head>
+<body>
+
+<header class="masthead">
+    <a class="masthead__brand" href="../main.html">城南中学 · 八班</a>
+    <nav class="masthead__nav" aria-label="主导航">
+        <a href="../main.html">首页</a>
+        <a href="../gallery.html">相册</a>
+        <a href="../word-clouds/word-clouds.html" aria-current="page">词云</a>
+        <a href="../main.html#roster">同学</a>
+    </nav>
+</header>
+
+<div class="page">
+    <main>
+
+        <section class="cloud-head">
+            <p class="cloud-head__kicker">CNZX / 2022 届</p>
+            <h1 class="cloud-head__title"><span id="wordCount">这些</span>词，<em>转成一个球</em></h1>
+            <p class="cloud-head__lede">
+                毕业那天想说的话都在这儿了。挑一个词点一下，会掉出一句祝福。
+            </p>
+            <p class="cloud-head__actions">
+                <button class="btn" type="button" id="randomBtn">随便抽一句</button>
+            </p>
+        </section>
+
+        <section class="cloud-stage" aria-label="祝福词云">
+            <div class="cloud-frame">
+                <div class="cloud" id="cloud"></div>
+
+                <div class="blessing" id="blessing" hidden>
+                    <div class="blessing__card">
+                        <p class="blessing__word mono">你点开了「<span id="blessingWord"></span>」</p>
+                        <p class="blessing__text" id="blessingText"></p>
+                        <div class="blessing__actions">
+                            <button class="btn btn--ghost" type="button" id="againBtn">再抽一句</button>
+                            <button class="btn" type="button" id="backBtn">回到词云</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="cloud-hint">按住拖动可以转，点任意一个词抽一句祝福</p>
+        </section>
+
+    </main>
+</div>
+
+<footer class="foot">
+    <div class="foot__inner">
+        <div>
+            <h2 class="foot__title">照片还在补</h2>
+            <p class="foot__line">手里有没传上来的照片、视频或同学资料，欢迎邮件给我们。</p>
+            <p class="foot__line">投稿：<a href="mailto:chengnan-zhongxue-202208@outlook.com">chengnan-zhongxue-202208@outlook.com</a></p>
+            <p class="foot__line">维护：<a href="mailto:chaibingkun2022@outlook.com">chaibingkun2022@outlook.com</a></p>
+            <p class="foot__line">离线版：<a href="https://gh.llkk.cc/https://github.com/Chai-Bing-Kun/CNZX-202208/releases/download/v.2025.07.20/CNZX-html.zip">电脑压缩包</a>　安卓：<a href="https://gh.llkk.cc/https://github.com/Chai-Bing-Kun/CNZX-202208/releases/download/v.2025.07.20/H53B103D3__20250720161019.apk">APP 安装包</a></p>
+        </div>
+        <p class="mono">CNZX · 202208</p>
+    </div>
+</footer>
+
+<noscript>
+    <p class="state" style="max-width:var(--maxw);margin:0 auto;padding:20px 28px 40px calc(var(--spine) + 28px);">
+        词云需要 JavaScript 才能转动。祝福语一样可以邮件索取：
+        <a href="mailto:chengnan-zhongxue-202208@outlook.com">chengnan-zhongxue-202208@outlook.com</a>。
+    </p>
+</noscript>
+
+<script src="../assets/cloud.js?v=2"></script>
+</body>
+</html>
