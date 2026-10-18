@@ -1,306 +1,140 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>初中生活记忆馆</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* 加载动画样式 - 三层结构 */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: white; /* 白色背景 */
-            z-index: 9997;
-        }
-        
-        .loading-animation-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9998; /* 图层二 - 动画容器 */
-        }
-        
-        .loading-animation {
-            width: 70vmin;
-            height: 70vmin;
-            max-width: 500px;
-            max-height: 500px;
-            object-fit: contain;
-            /* 保持原始蓝白色动画不变 */
-        }
-        
-        .progress-container {
-            position: fixed;
-            bottom: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999; /* 图层一 - 进度条和文字 */
-            text-align: center;
-            width: 100%;
-        }
-        
-        .progress-text {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333; /* 深灰色文字 */
-            margin-bottom: 15px;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        .progress-bar {
-            width: 300px;
-            max-width: 80%;
-            height: 8px;
-            background-color: #f0f0f0; /* 浅灰色轨道 */
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 0 auto;
-        }
-        
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #4a8fe7, #6e45e2); /* 蓝色到紫色的渐变 */
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 4px;
-        }
-
-        /* 禁止滚动的样式 */
-        body.loading {
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* 确保在所有设备上加载界面背景都是白色 */
-        @media only screen and (max-width: 768px) {
-            .loading-overlay {
-                background-color: white !important;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>初中生活记忆馆 · 城南中学 2022 届八班</title>
+<meta name="description" content="城南中学 2022 届初中八班的照片、同学名录与毕业留言。">
+<link rel="stylesheet" href="assets/site.css?v=5">
 </head>
 <body>
-    <!-- 加载动画层 - 三层结构 -->
-    <div class="loading-overlay" id="loadingOverlay"></div>
-    <div class="loading-animation-container">
-        <img src="img/loading10.gif" alt="加载中..." class="loading-animation" id="loadingAnimation">
-    </div>
-    <div class="progress-container">
-        <div class="progress-text" id="progressText">0%</div>
-        <div class="progress-bar">
-            <div class="progress-bar-fill" id="progressBar"></div>
-        </div>
-    </div>
 
-    <!-- 轮播图区域 -->
-    <div class="carousel">
-        <div class="slides">
-            <div class="slide">
-                <img src="img/1.JPG" alt="班级合影">
+<header class="masthead">
+    <a class="masthead__brand" href="main.html">城南中学 · 八班</a>
+    <nav class="masthead__nav" aria-label="主导航">
+        <a href="main.html" aria-current="page">首页</a>
+        <a href="gallery.html">相册</a>
+        <a href="word-clouds/word-clouds.html">留言</a>
+        <a href="#roster">同学</a>
+    </nav>
+</header>
+
+<div class="page">
+    <main>
+
+        <!-- 封面 -->
+        <section class="hero">
+            <div>
+                <span class="hero__kicker">2022 届 · 初中八班</span>
+                <h1 class="hero__title">
+                    三年被压进一本相册，<br><em>随时可以翻开</em>。
+                </h1>
+                <p class="hero__lede">
+                    运动会、研学、艺术节，还有那些没被归类的日常。
+                    照片按拍摄时间排好，一张没删——翻到哪页算哪页。
+                </p>
+                <ul class="hero__stats">
+                    <li><div><b id="statPhotos">644</b><span>张照片</span></div></li>
+                    <li><div><b id="statAlbums">6</b><span>本相册</span></div></li>
+                    <li><div><b>47</b><span>位同学</span></div></li>
+                </ul>
+                <a class="btn" href="gallery.html">翻开相册 →</a>
             </div>
-            <div class="slide">
-                <img src="img/2.JPG" alt="运动会瞬间">
+
+            <div class="cover" aria-hidden="true">
+                <div class="cover__label">
+                    <b>初中生活<br>同学录</b>
+                    <small>CHENGNAN · CLASS 8 · 2022</small>
+                </div>
+                <div class="cover__foot">
+                    <span>第 1 版</span>
+                    <span>共 47 人</span>
+                </div>
             </div>
-            <div class="slide">
-                <img src="img/3.JPG" alt="课堂时光">
+        </section>
+
+        <!-- 最近拍的 -->
+        <section class="section">
+            <div class="section__head">
+                <h2 class="section__title">最近拍的</h2>
+                <p class="section__note">按拍摄时间，最新的六张。点开可以放大。</p>
             </div>
-            <div class="slide">
-                <img src="img/4.JPG" alt="毕业典礼">
+            <div id="recent"></div>
+        </section>
+
+        <!-- 同学名录 -->
+        <section class="section" id="roster">
+            <div class="section__head">
+                <h2 class="section__title">同学名录</h2>
+                <p class="section__note">47 人，按入学时的座号排。</p>
             </div>
-            <div class="slide">
-                <img src="img/5.JPG" alt="课外实践">
-            </div>
+            <ol class="roster">
+                <li><b>01</b><a href="no-information.html">李想</a></li>
+                <li><b>02</b><a href="no-information.html">应佑吉</a></li>
+                <li><b>03</b><a href="no-information.html">陈邦</a></li>
+                <li><b>04</b><a href="no-information.html">柴炳坤</a></li>
+                <li><b>05</b><a href="no-information.html">余子恒</a></li>
+                <li><b>06</b><a href="no-information.html">郑浩宇</a></li>
+                <li><b>07</b><a href="no-information.html">宋竞航</a></li>
+                <li><b>08</b><a href="no-information.html">陈俊宇</a></li>
+                <li><b>09</b><a href="no-information.html">郑浩</a></li>
+                <li><b>10</b><a href="no-information.html">陈绎涵</a></li>
+                <li><b>11</b><a href="no-information.html">王懿</a></li>
+                <li><b>12</b><a href="no-information.html">吴昕宇</a></li>
+                <li><b>13</b><a href="no-information.html">郑袭轩</a></li>
+                <li><b>14</b><a href="no-information.html">李渝涵</a></li>
+                <li><b>15</b><a href="no-information.html">曾竣轩</a></li>
+                <li><b>16</b><a href="no-information.html">邱相和</a></li>
+                <li><b>17</b><a href="no-information.html">余家禾</a></li>
+                <li><b>18</b><a href="no-information.html">陈博宇</a></li>
+                <li><b>19</b><a href="no-information.html">陈一恺</a></li>
+                <li><b>20</b><a href="no-information.html">吴子毅</a></li>
+                <li><b>21</b><a href="no-information.html">章子轩</a></li>
+                <li><b>22</b><a href="no-information.html">倪荣博</a></li>
+                <li><b>23</b><a href="no-information.html">何仕轩</a></li>
+                <li><b>24</b><a href="no-information.html">郑璟雯</a></li>
+                <li><b>25</b><a href="no-information.html">吴荧月</a></li>
+                <li><b>26</b><a href="no-information.html">张沁妍</a></li>
+                <li><b>27</b><a href="no-information.html">舒景灿</a></li>
+                <li><b>28</b><a href="no-information.html">邱子倩</a></li>
+                <li><b>29</b><a href="no-information.html">吴丞淑</a></li>
+                <li><b>30</b><a href="no-information.html">郭欣怡</a></li>
+                <li><b>31</b><a href="no-information.html">季昕蕾</a></li>
+                <li><b>32</b><a href="no-information.html">余梦芯</a></li>
+                <li><b>33</b><a href="no-information.html">姜楠</a></li>
+                <li><b>34</b><a href="no-information.html">祝婕妤</a></li>
+                <li><b>35</b><a href="no-information.html">黄雪</a></li>
+                <li><b>36</b><a href="no-information.html">宋亭洁</a></li>
+                <li><b>37</b><a href="no-information.html">郑茜绫</a></li>
+                <li><b>38</b><a href="no-information.html">倪若桐</a></li>
+                <li><b>39</b><a href="no-information.html">陈思绮</a></li>
+                <li><b>40</b><a href="no-information.html">詹乔钰</a></li>
+                <li><b>41</b><a href="no-information.html">王雨馨</a></li>
+                <li><b>42</b><a href="no-information.html">叶佳慧</a></li>
+                <li><b>43</b><a href="no-information.html">郑砚芷</a></li>
+                <li><b>44</b><a href="no-information.html">宋诗涵</a></li>
+                <li><b>45</b><a href="no-information.html">陆雪</a></li>
+                <li><b>46</b><a href="no-information.html">邹泽毫</a></li>
+                <li><b>47</b><a href="no-information.html">薛冰瑶</a></li>
+            </ol>
+        </section>
+
+    </main>
+</div>
+
+<footer class="foot">
+    <div class="foot__inner">
+        <div>
+            <h2 class="foot__title">照片还在补</h2>
+            <p class="foot__line">手里有没传上来的照片、视频或同学资料，欢迎邮件给我们。</p>
+            <p class="foot__line">投稿：<a href="mailto:chengnan-zhongxue-202208@outlook.com">chengnan-zhongxue-202208@outlook.com</a></p>
+            <p class="foot__line">维护：<a href="mailto:chaibingkun2022@outlook.com">chaibingkun2022@outlook.com</a></p>
         </div>
+        <p class="mono">CNZX · 202208</p>
     </div>
+</footer>
 
-    <!-- 内容区域 -->
-    <div class="content">
-        <div class="grid-container">
-            <a href="no-body.html" target="_blank" class="card">
-                <img src="img/4.JPG" alt="运动会">
-                <h2>热血运动会</h2>
-            </a>
-            <a href="no-body.html" target="_blank" class="card">
-                <img src="img/5.JPG" alt="课堂时光">
-                <h2>课堂剪影</h2>
-            </a>
-            <a href="no-body.html" target="_blank" class="card">
-                <img src="img/6.JPG" alt="课外活动">
-                <h2>社团活动</h2>
-            </a>
-            <a href="no-body.html" target="_blank" class="card">
-                <img src="img/7.JPG" alt="校园风景">
-                <h2>美丽校园</h2>
-            </a>
-            <a href="happy-times/happy-time.html" target="_blank" class="card">
-                <img src="img/快乐时光.png" alt="快乐时光">
-                <h2>快乐时光</h2>
-            </a>
-            <a href="word-clouds/word-clouds.html" target="_blank" class="card">
-                <img src="img/7.JPG" alt="毕业祝福">
-                <h2>毕业快乐</h2>
-            </a>
-        </div>
-    </div>
-
-    <!-- 关于我们部分 -->
-    <div class="about-us">
-        <h2>关于我们</h2>
-
-        <!-- 同学名字 - 四列布局 -->
-        <div class="classmates-grid">
-            <div><a href="no-information.html">1. 李想</a></div>
-            <div><a href="no-information.html">2. 应佑吉</a></div>
-            <div><a href="no-information.html">3. 陈邦</a></div>
-            <div><a href="no-information.html">4. 柴炳坤</a></div>
-            <div><a href="no-information.html">5. 余子恒</a></div>
-            <div><a href="no-information.html">6. 郑浩宇</a></div>
-            <div><a href="no-information.html">7. 宋竞航</a></div>
-            <div><a href="no-information.html">8. 陈俊宇</a></div>
-            <div><a href="no-information.html">9. 郑浩</a></div>
-            <div><a href="no-information.html">10. 陈绎涵</a></div>
-            <div><a href="no-information.html">11. 王懿</a></div>
-            <div><a href="no-information.html">12. 吴昕宇</a></div>
-            <div><a href="no-information.html">13. 郑袭轩</a></div>
-            <div><a href="no-information.html">14. 李渝涵</a></div>
-            <div><a href="no-information.html">15. 曾竣轩</a></div>
-            <div><a href="no-information.html">16. 邱相和</a></div>
-            <div><a href="no-information.html">17. 余家禾</a></div>
-            <div><a href="no-information.html">18. 陈博宇</a></div>
-            <div><a href="no-information.html">19. 陈一恺</a></div>
-            <div><a href="no-information.html">20. 吴子毅</a></div>
-            <div><a href="no-information.html">21. 章子轩</a></div>
-            <div><a href="no-information.html">22. 倪荣博</a></div>
-            <div><a href="no-information.html">23. 何仕轩</a></div>
-            <div><a href="no-information.html">24. 郑璟雯</a></div>
-            <div><a href="no-information.html">25. 吴荧月</a></div>
-            <div><a href="no-information.html">26. 张沁妍</a></div>
-            <div><a href="no-information.html">27. 舒景灿</a></div>
-            <div><a href="no-information.html">28. 邱子倩</a></div>
-            <div><a href="no-information.html">29. 吴丞淑</a></div>
-            <div><a href="no-information.html">30. 郭欣怡</a></div>
-            <div><a href="no-information.html">31. 季昕蕾</a></div>
-            <div><a href="no-information.html">32. 余梦芯</a></div>
-            <div><a href="no-information.html">33. 姜楠</a></div>
-            <div><a href="no-information.html">34. 祝婕妤</a></div>
-            <div><a href="no-information.html">35. 黄雪</a></div>
-            <div><a href="no-information.html">36. 宋亭洁</a></div>
-            <div><a href="no-information.html">37. 郑茜绫</a></div>
-            <div><a href="no-information.html">38. 倪若桐</a></div>
-            <div><a href="no-information.html">39. 陈思绮</a></div>
-            <div><a href="no-information.html">40. 詹乔钰</a></div>
-            <div><a href="no-information.html">41. 王雨馨</a></div>
-            <div><a href="no-information.html">42. 叶佳慧</a></div>
-            <div><a href="no-information.html">43. 郑砚芷</a></div>
-            <div><a href="no-information.html">44. 宋诗涵</a></div>
-            <div><a href="no-information.html">45. 陆雪</a></div>
-            <div><a href="no-information.html">46. 邹泽毫</a></div>
-            <div><a href="no-information.html">47. 薛冰瑶</a></div>
-        </div>
-
-        <!-- 普通文字部分 -->
-        <div class="footer-text">
-            <div>欢迎来到网站！</div>
-            <div>提交内容：chengnan-zhongxue-202208@outlook.com</div>
-            <div>维护联系: chaibingkun2022@outlook.com</div>
-            <div>欢迎提交内容！</div>
-        </div>
-    </div>
-
-    <script src="scripts.js"></script>
-    <script>
-        // 禁止滚动的函数
-        function disableScroll() {
-            document.body.classList.add('loading');
-            document.addEventListener('wheel', preventDefault, { passive: false });
-            document.addEventListener('touchmove', preventDefault, { passive: false });
-            document.addEventListener('keydown', preventScrollKeys, { passive: false });
-        }
-
-        // 恢复滚动的函数
-        function enableScroll() {
-            document.body.classList.remove('loading');
-            document.removeEventListener('wheel', preventDefault);
-            document.removeEventListener('touchmove', preventDefault);
-            document.removeEventListener('keydown', preventScrollKeys);
-        }
-
-        function preventDefault(e) {
-            e.preventDefault();
-        }
-
-        function preventScrollKeys(e) {
-            const keys = ['Space', 'ArrowUp', 'ArrowDown', 'PageUp', 'PageDown'];
-            if (keys.includes(e.code)) {
-                e.preventDefault();
-            }
-        }
-
-        // 模拟加载进度
-        function simulateLoading() {
-            disableScroll();
-            
-            var progress = 0;
-            var progressText = document.getElementById('progressText');
-            var progressBar = document.getElementById('progressBar');
-            
-            var interval = setInterval(function() {
-                progress += Math.random() * 10;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    
-                    if (document.readyState === 'complete') {
-                        hideLoading();
-                    } else {
-                        window.addEventListener('load', hideLoading);
-                    }
-                }
-                
-                progressText.textContent = Math.min(Math.round(progress), 100) + '%';
-                progressBar.style.width = Math.min(progress, 100) + '%';
-                
-                // 动态改变颜色
-                if (progress < 50) {
-                    progressBar.style.background = `linear-gradient(90deg, #4a8fe7, #4a8fe7 ${progress*2}%, #6e45e2 0%)`;
-                }
-            }, 300);
-        }
-        
-        function hideLoading() {
-            var loadingOverlay = document.getElementById('loadingOverlay');
-            var loadingContainer = document.querySelector('.loading-animation-container');
-            var progressContainer = document.querySelector('.progress-container');
-            
-            loadingOverlay.style.transition = 'opacity 0.8s ease';
-            loadingContainer.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-            progressContainer.style.transition = 'opacity 0.8s ease';
-            
-            loadingOverlay.style.opacity = '0';
-            loadingContainer.style.opacity = '0';
-            loadingContainer.style.transform = 'translate(-50%, -50%) scale(0.95)';
-            progressContainer.style.opacity = '0';
-            
-            setTimeout(function() {
-                loadingOverlay.remove();
-                loadingContainer.remove();
-                progressContainer.remove();
-                enableScroll();
-            }, 800);
-        }
-        
-        document.addEventListener('DOMContentLoaded', simulateLoading);
-    </script>
+<script src="photos/albums.js"></script>
+<script src="assets/site.js?v=5"></script>
 </body>
 </html>

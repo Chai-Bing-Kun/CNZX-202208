@@ -1,60 +1,78 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>这里什么也没有~</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>空白页 · 初中生活记忆馆</title>
+<link rel="stylesheet" href="assets/site.css?v=3">
+<style>
+    .blank {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 110px 28px 140px calc(var(--spine) + 28px);
+        min-height: 62vh;
+    }
+    .blank__title {
+        font-family: var(--f-display);
+        font-size: clamp(1.8rem, 5vw, 2.8rem);
+        font-weight: 400;
+        margin: 0;
+        letter-spacing: 0.04em;
+        color: var(--ink-3);
+    }
+    .blank__sub {
+        margin: 16px 0 0;
+        color: var(--ink-2);
+        max-width: 28em;
+    }
+    .blank__back {
+        display: block;
+        margin-top: 30px;
+        font-size: 0.9rem;
+    }
+    .blank .mono {
+        display: block;
+        margin-bottom: 20px;
+        color: var(--seal);
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+    }
+    @media (max-width: 640px) {
+        .blank { padding: 70px 16px 100px calc(var(--spine) + 16px); }
+    }
+</style>
 </head>
-<body class="empty-page">
-    <div class="mouse-glow" id="mouseGlow"></div>
-    
-    <a href="main.html" class="back-button">
-        <div class="main-text">这里什么也没有~</div>
-        <div class="sub-text">点击回到主界面</div>
-    </a>
+<body>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const mouseGlow = document.getElementById('mouseGlow');
-            let mouseX = 0;
-            let mouseY = 0;
-            let glowX = 0;
-            let glowY = 0;
-            
-            document.addEventListener('mousemove', function(e) {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-                mouseGlow.style.opacity = '1';
-            });
-            
-            document.addEventListener('mouseleave', function() {
-                mouseGlow.style.opacity = '0';
-            });
-            
-            document.addEventListener('mouseenter', function() {
-                mouseGlow.style.opacity = '1';
-            });
-            
-            function animate() {
-                glowX += (mouseX - glowX) * 0.2;
-                glowY += (mouseY - glowY) * 0.2;
-                mouseGlow.style.left = `${glowX}px`;
-                mouseGlow.style.top = `${glowY}px`;
-                requestAnimationFrame(animate);
-            }
-            
-            animate();
-            
-            document.querySelector('.back-button').addEventListener('click', function(e) {
-                e.preventDefault();
-                this.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                    window.location.href = this.getAttribute('href');
-                }, 200);
-            });
-        });
-    </script>
+<header class="masthead">
+    <a class="masthead__brand" href="main.html">城南中学 · 八班</a>
+    <nav class="masthead__nav" aria-label="主导航">
+        <a href="main.html">首页</a>
+        <a href="gallery.html">相册</a>
+        <a href="word-clouds/word-clouds.html">留言</a>
+        <a href="main.html#roster">同学</a>
+    </nav>
+</header>
+
+<div class="page">
+    <main class="blank">
+        <span class="mono">空白页</span>
+        <h1 class="blank__title">这里什么也没有~</h1>
+        <p class="blank__sub">这一页还空着。相册里的照片倒是不少，去那边看看？</p>
+        <a class="blank__back" href="gallery.html">去翻相册 →</a>
+        <br>
+        <a class="blank__back" href="main.html">← 回到首页</a>
+    </main>
+</div>
+
+<footer class="foot">
+    <div class="foot__inner">
+        <div>
+            <p class="foot__line">投稿：<a href="mailto:chengnan-zhongxue-202208@outlook.com">chengnan-zhongxue-202208@outlook.com</a></p>
+        </div>
+        <p class="mono">CNZX · 202208</p>
+    </div>
+</footer>
+
 </body>
 </html>
