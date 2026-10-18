@@ -1,0 +1,490 @@
+/* ================================================================
+   留言页 · 关键词云 + 纸条墙
+   沿用 site.css 的纸、墨、蓝、印章红，只补这一页需要的东西。
+   ================================================================ */
+
+/* ---------- 页头 ---------- */
+
+.board-head {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 46px 28px 8px calc(var(--spine) + 28px);
+}
+
+.board-head__kicker {
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: var(--seal);
+  margin: 0;
+}
+
+.board-head__title {
+  font-family: var(--f-display);
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  margin: 10px 0 0;
+  line-height: 1.2;
+}
+
+.board-head__lede {
+  margin: 16px 0 0;
+  max-width: 32em;
+  color: var(--ink-2);
+}
+
+.board-head__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 26px;
+  margin: 22px 0 0;
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+}
+
+.board-head__meta b {
+  font-weight: 400;
+  color: var(--ink);
+}
+
+/* ---------- 关键词云 ---------- */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px 20px;
+  padding: 2px 0 10px;
+}
+
+.tag {
+  --tag-size: 1rem;
+  position: relative;
+  border: 0;
+  background: none;
+  padding: 3px 1px 4px;
+  font-family: var(--f-display);
+  font-size: var(--tag-size);
+  line-height: 1.32;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.tag sup {
+  font-family: var(--f-mono);
+  font-size: 0.5em;
+  letter-spacing: 0;
+  vertical-align: super;
+  margin-left: 0.15em;
+  color: var(--ink-3);
+  opacity: 0.85;
+}
+
+.tag:hover {
+  color: var(--blue);
+  transform: translateY(-1px);
+}
+
+.tag:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.tag[aria-pressed="true"] {
+  color: var(--seal);
+  box-shadow: inset 0 -2px 0 var(--seal);
+}
+
+.tag[aria-pressed="true"] sup {
+  color: var(--seal);
+  opacity: 1;
+}
+
+/* ---------- 纸条墙 ---------- */
+
+.wall {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 8px;
+  columns: 3;
+  column-gap: 26px;
+}
+
+.note {
+  position: relative;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  margin: 0 0 26px;
+  padding: 26px 22px 16px;
+  background: var(--paper-3);
+  border-radius: 1px;
+  box-shadow: var(--shadow-photo);
+  transform: rotate(var(--tilt, 0deg));
+  --accent: var(--blue);
+}
+
+/* 顶上那截胶带 */
+.note::before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 56px;
+  height: 16px;
+  margin-left: -28px;
+  transform: rotate(-2.5deg);
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(222, 206, 168, 0.8) 0 6px,
+    rgba(205, 188, 150, 0.8) 6px 12px
+  );
+  pointer-events: none;
+}
+
+/* 左边一道细色条，用来区分不同纸条 */
+.note::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 16px;
+  bottom: 16px;
+  width: 3px;
+  background: var(--accent);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.note__text {
+  margin: 0;
+  font-family: var(--f-display);
+  font-size: 1.03rem;
+  line-height: 1.95;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.note__text mark {
+  background: none;
+  color: var(--seal);
+  box-shadow: inset 0 -2px 0 rgba(168, 58, 44, 0.35);
+}
+
+.note__foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px dotted rgba(35, 38, 42, 0.18);
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+
+.note__who {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-2);
+  letter-spacing: 0.06em;
+}
+
+.note__seat {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--seal);
+  border-radius: 50%;
+  color: var(--seal);
+  font-size: 0.58rem;
+  letter-spacing: 0;
+}
+
+/* ---------- 写信的那张纸 ---------- */
+
+.composer {
+  position: relative;
+  max-width: 740px;
+  padding: 34px 30px 26px;
+  background: var(--paper-3);
+  border-radius: 1px;
+  box-shadow: var(--shadow-photo);
+  transform: rotate(-0.5deg);
+}
+
+.composer::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 46px;
+  width: 84px;
+  height: 18px;
+  transform: rotate(-3deg);
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(222, 206, 168, 0.82) 0 7px,
+    rgba(205, 188, 150, 0.82) 7px 14px
+  );
+  pointer-events: none;
+}
+
+.composer__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 116px;
+  gap: 24px;
+}
+
+.composer__field {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.composer__field > span {
+  display: block;
+  font-family: var(--f-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: var(--ink-3);
+  margin-bottom: 4px;
+}
+
+.composer input,
+.composer textarea {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px dotted rgba(35, 38, 42, 0.38);
+  background: transparent;
+  padding: 5px 2px;
+  font-family: var(--f-body);
+  font-size: 1rem;
+  color: var(--ink);
+  border-radius: 0;
+}
+
+.composer input::placeholder,
+.composer textarea::placeholder {
+  color: var(--ink-3);
+  opacity: 0.75;
+}
+
+/* 正文用横线纸 */
+.composer textarea {
+  min-height: 158px;
+  padding: 8px 12px;
+  border: 1px dotted rgba(35, 38, 42, 0.32);
+  line-height: 30px;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 29px,
+    rgba(35, 38, 42, 0.12) 29px 30px
+  );
+  background-position: 0 7px;
+  background-repeat: repeat;
+  resize: vertical;
+}
+
+.composer input:focus,
+.composer textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  background-color: rgba(42, 74, 99, 0.035);
+}
+
+.composer input:focus-visible,
+.composer textarea:focus-visible {
+  box-shadow: 0 1px 0 var(--blue);
+}
+
+.composer__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.composer__count {
+  font-family: var(--f-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+}
+
+.composer__count.is-over {
+  color: var(--seal);
+}
+
+.composer__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.composer .btn {
+  margin-top: 0;
+}
+
+.btn--ghost {
+  background: transparent;
+  border: 1px solid rgba(42, 74, 99, 0.4);
+  color: var(--blue);
+  box-shadow: none;
+}
+
+.btn--ghost:hover {
+  background: rgba(42, 74, 99, 0.07);
+  color: var(--blue);
+}
+
+.btn[disabled] {
+  opacity: 0.42;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.composer__hint {
+  margin: 18px 0 0;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: var(--ink-3);
+}
+
+.composer__hint a {
+  color: var(--blue);
+  word-break: break-all;
+}
+
+/* ---------- 提示条 ---------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 60;
+  max-width: calc(100vw - 32px);
+  padding: 10px 18px;
+  background: var(--board);
+  color: var(--paper-3);
+  border-radius: 2px;
+  font-size: 0.86rem;
+  letter-spacing: 0.06em;
+  box-shadow: 0 14px 30px -18px rgba(35, 38, 42, 0.9);
+  opacity: 0;
+  transform: translate(-50%, 14px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast.is-in {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ---------- 断点 ---------- */
+
+@media (max-width: 900px) {
+  .wall {
+    columns: 2;
+    column-gap: 20px;
+  }
+
+  .composer {
+    padding: 30px 24px 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  .board-head {
+    padding: 34px 16px 4px calc(var(--spine) + 16px);
+  }
+
+  .board-head__title {
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+  }
+
+  .board-head__lede {
+    font-size: 0.95rem;
+  }
+
+  .board-head__meta {
+    gap: 6px 18px;
+    margin-top: 16px;
+    font-size: 0.66rem;
+  }
+
+  .tags {
+    gap: 10px 16px;
+  }
+
+  .wall {
+    columns: 1;
+    column-gap: 0;
+  }
+
+  .note {
+    margin-bottom: 20px;
+    padding: 22px 18px 14px;
+  }
+
+  .note__text {
+    font-size: 0.98rem;
+    line-height: 1.9;
+  }
+
+  .composer {
+    padding: 26px 18px 20px;
+    transform: none;
+  }
+
+  .composer::before {
+    left: 28px;
+  }
+
+  .composer__row {
+    grid-template-columns: minmax(0, 1fr) 92px;
+    gap: 16px;
+  }
+
+  .composer textarea {
+    min-height: 140px;
+    line-height: 28px;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0 27px,
+      rgba(35, 38, 42, 0.12) 27px 28px
+    );
+  }
+
+  .composer__actions {
+    width: 100%;
+  }
+
+  .composer__actions .btn {
+    flex: 1 1 0;
+    text-align: center;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note,
+  .composer {
+    transform: none;
+  }
+
+  .tag,
+  .toast {
+    transition: none;
+  }
+}

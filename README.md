@@ -14,6 +14,8 @@
 img/（原图，2 GB 级，不入库）
    └─ tools/build_photos.py  ──▶  photos/（WebP 三档 + albums.json）
                                       └─▶ main.html / gallery.html / album.html
+
+messages/messages.json（手写）──▶ messages.html（留言墙，关键词云 + 纸条）
 ```
 
 页面本身不含任何照片清单，全部由 `photos/albums.json` 驱动。加照片只需要丢进 `img/<相册>/` 再跑一次脚本。
@@ -27,7 +29,7 @@ img/（原图，2 GB 级，不入库）
 | `main.html` | 新首页。报头 + 统计 + 「最近拍的」六张 + 47 位同学名录。 |
 | `gallery.html` | 相册总览。按拍摄时间列出全部相册（封面、张数、日期区间）。 |
 | `album.html?id=<id>` | 单本相册。瀑布流「照片纸」布局，点开进灯箱，支持 ← → 与 Esc。 |
-| `word-clouds/word-clouds.html` | 3D 毕业祝福词云（沿用旧页）。 |
+| `messages.html` | 留言墙。关键词云 + 纸条式留言 + 写信（本地草稿，邮件发出，无后端）。 |
 | `no-information.html` / `no-body.html` | 两个占位页，已改成新设计语言。 |
 | `index.html` | 入口，直接 `location.replace('./main.html')`，一站到底。 |
 
@@ -37,9 +39,33 @@ img/（原图，2 GB 级，不入库）
 | --- | --- |
 | `assets/site.css` | 新设计系统：牛皮纸 + 装订孔 + 胶带照片，全部尺寸在 `:root` 变量里。 |
 | `assets/site.js` | 数据读取、相册/照片渲染、分块加载（每次 48 张）、灯箱。 |
+| `assets/messages.css` / `assets/messages.js` | 留言页专用样式与渲染（关键词统计、筛选、草稿、mailto）。 |
+| `messages/messages.json` | 留言数据源，人手编辑，一条一个对象（字段见下）。 |
 | `tools/build_photos.py` | 图片压缩 + 清单生成脚本（下面详述）。 |
 | `photos/` | **构建产物**，脚本生成，随站点一起发布。 |
 | `photos/.cache.json` | 增量构建缓存（不进版本库）。 |
+
+---
+
+## 留言
+
+`messages/messages.json` 是唯一的数据源，改完推上去就生效，不需要构建：
+
+```json
+{ "updated": "2026-10-18",
+  "messages": [
+    { "id": "m13", "n": "匿名", "s": "", "d": "2026-09-30",
+      "t": "正文……", "tags": ["毕业", "运动会"] }
+  ] }
+```
+
+- `n` 署名（空着就是匿名）、`s` 座号（可选）、`d` 日期 `YYYY-MM-DD`、`t` 正文、`tags` 关键词；
+- `tags` 不写也行，脚本会拿内置词典（毕业 / 研学 / 运动会 …）从正文里认；
+- 页面按 `d` 倒序排列，关键词云的字号由「被提到几次」算出来，点词即筛选；
+- 全站没有后端、没有统计脚本、没有第三方评论组件；只有署名和座号这两个可选项，留空即匿名。
+
+写入口没有后端：内容存在浏览器 `localStorage` 草稿里，点「生成邮件」走 `mailto:`，
+或点「复制内容」自己粘贴。收到的信要人工贴回 `messages.json`。
 
 ---
 
@@ -115,6 +141,7 @@ py -3 -m http.server 8866
 - `同学总名字临时存储.txt` 是 47 人名单的原始片段，名录已固化在 `main.html`。
 - 旧的 `styles.css` / `scripts.js` / `happy-times/` / 三段式入口页已删除；
   原来引导页里的离线压缩包与安卓 APP 下载链接，挪到了首页页脚。
+- 旧的 3D 词云页（`word-clouds/`，含 600 KB 的 Three.js）已删除，换成本页 `messages.html`。
 
 ---
 
