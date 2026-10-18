@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站引导</title>
+    <style>
+        body{font-family:Arial,sans-serif;margin:0;padding:20px;background:#f5f5f5;color:#333}
+        .container{max-width:800px;margin:0 auto;padding:20px;background:white;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+        .button-group{display:flex;flex-direction:column;gap:15px;margin-top:30px}
+        .btn{padding:12px 20px;background:#4285f4;color:white;text-decoration:none;border-radius:4px;text-align:center;transition:background-color 0.3s;cursor:pointer}
+        .btn:hover{background:#3367d6}
+        .recommended::before{content:"【推荐】";color:#0f9d58;font-weight:bold}
+        #help-popup{
+            display:none;
+            position:fixed;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            background:white;
+            padding:20px;
+            border-radius:8px;
+            box-shadow:0 4px 20px rgba(0,0,0,0.15);
+            z-index:1000;
+            width:90%;
+            max-width:600px;
+            max-height:80vh;
+            overflow:auto
+        }
+        #overlay{
+            display:none;
+            position:fixed;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            background:rgba(0,0,0,0.5);
+            z-index:999
+        }
+        .close-btn{
+            position:absolute;
+            top:10px;
+            right:10px;
+            cursor:pointer;
+            font-size:20px
+        }
+        .os-tip{
+            background:#f8f9fa;
+            padding:12px;
+            border-radius:6px;
+            margin:10px 0;
+            border-left:4px solid #4285f4
+        }
+        code{
+            background:#e9ecef;
+            padding:2px 6px;
+            border-radius:4px;
+            font-family:monospace
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>欢迎访问</h1>
+        <div class="button-group">
+            <a href="#" class="btn" id="cnzx-btn">CNZX</a>
+            <a href="#" class="btn" id="help-btn">帮助指南</a>
+        </div>
+        <div id="cnzx-guide" style="display:none"></div>
+    </div>
+
+    <div id="overlay"></div>
+    <div id="help-popup">
+        <span class="close-btn">&times;</span>
+        <h2>📱 使用指南</h2>
+        <ol>
+            <li><strong>第一步：智能检测</strong>
+                <div class="os-tip">
+                    点击 <button style="background:#4285f4;color:white;border:none;padding:4px 10px;border-radius:4px">CNZX</button> 按钮后，系统将：
+                    <ul style="margin-top:8px">
+                        <li>📡 测试当前网络连接速度（约需1-2秒）</li>
+                        <li>🔍 自动识别您的设备类型</li>
+                    </ul>
+                </div>
+            </li>
+            <li><strong>第二步：结果分析</strong>
+                <div class="os-tip">
+                    系统将根据以下因素提供建议：
+                    <ul style="margin-top:8px">
+                        <li>📶 <strong>网络质量</strong>：分为「良好」和「较差」两个等级</li>
+                        <li>📱 <strong>设备类型</strong>：
+                            <ul>
+                                <li>Android手机/平板</li>
+                                <li>iPhone/iPad</li>
+                                <li>Windows/Mac/Linux电脑</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li><strong>第三步：选择访问方式</strong>
+                <div class="os-tip">
+                    请优先选择标记为 <span style="color:#0f9d58;font-weight:bold">【推荐】</span> 的选项：
+                    <ul style="margin-top:8px">
+                        <li>🌐 <strong>网页版</strong>：实时访问最新内容</li>
+                        <li>📦 <strong>离线版</strong>：网络不稳定时的最佳选择</li>
+                        <li>⬇️ <strong>APP下载</strong>：安卓设备专用</li>
+                    </ul>
+                </div>
+            </li>
+        </ol>
+
+        <h3>💡 详细说明</h3>
+        <div class="os-tip">
+            <h4>不同设备支持情况</h4>
+            <ul>
+                <li>🤖 <strong>安卓设备</strong>：
+                    <ul>
+                        <li>推荐下载专用APP获得完整功能</li>
+                        <li>APP安装包约214.4MB，支持离线使用基础功能</li>
+                        <li>若拒绝安装APP，可使用网页版基础功能</li>
+                    </ul>
+                </li>
+                <li>🍎 <strong>iOS设备</strong>：
+                    <ul>
+                        <li><em>由于苹果限制，仅支持网页版访问</em></li>
+                        <li>建议添加到主屏幕获得类APP体验</li>
+                    </ul>
+                </li>
+                <li>💻 <strong>电脑设备</strong>：
+                    <ul>
+                        <li>离线版包含完整功能，解压后约211MB</li>
+                        <li>支持Windows/macOS/Linux三大系统</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <h3>⚙️ 离线版本使用指南</h3>
+        <div class="os-tip">
+            <h4>电脑用户</h4>
+            <ol>
+                <li>下载 <a href="https://gh.llkk.cc/https://github.com/Chai-Bing-Kun/CNZX-202208/releases/download/v.2025.07.20/CNZX-html.zip">CNZX-html.zip</a> 压缩包<br>（你可以选择在这里直接下载，而不是通过网络和设备检测）</li>
+                <li>解压到任意文件夹（建议英文路径）</li>
+                <li>双击 <code>index.html</code> 文件</li>
+                <li>首次使用时可能需要：
+                    <ul>
+                        <li>Windows：允许运行HTML应用</li>
+                        <li>macOS：右键选择「打开方式」→ 浏览器</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <h4>安卓用户</h4>
+            <ol>
+                <li>下载 <a href="https://gh.llkk.cc/https://github.com/Chai-Bing-Kun/CNZX-202208/releases/download/v.2025.07.20/H53B103D3__20250720161019.apk">H53B103D3__20250720161019.apk </a><br>（你可以选择在这里直接下载，而不是通过网络和设备检测）</li>
+                <li>点击安装包 → 允许「未知来源」安装</li>
+                <li>完成安装后打开应用</li>
+                <li>若遇安全提示，请前往设置开启「安装未知应用」权限</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // 设备分类（1:安卓 2:桌面系统 3:iOS/其他）
+        function getDeviceClass(){
+            const ua = navigator.userAgent;
+            return /android/i.test(ua) ? 1 : 
+                   /Win|Mac|Linux/i.test(ua) ? 2 : 3;
+        }
+
+        // 网络检测
+        async function checkNetworkSpeed(){
+            try {
+                const start = performance.now();
+                await fetch('https://cn-202208.pages.dev/?t='+Date.now(), {method:'HEAD',cache:'no-store'});
+                return performance.now() - start < 300;
+            } catch { return false; }
+        }
+
+        // 显示访问选项
+        async function showGuide(){
+            const deviceClass = getDeviceClass();
+            const isGoodNetwork = await checkNetworkSpeed();
+            const guide = document.getElementById("cnzx-guide");
+            
+            let html = '<div class="button-group">';
+            const webLink = '<a href="https://cn-202208.pages.dev/" class="btn'+(isGoodNetwork?' recommended':'')+'">网页版</a>';
+            
+            if(deviceClass === 1){ // 安卓
+                html += webLink;
+                html += '<a href="https://gh.llkk.cc/https://github.com/Chai-Bing-Kun/CNZX-202208/releases/download/v.2025.07.20/H53B103D3__20250720161019.apk" class="btn'+(isGoodNetwork?'':' recommended')+'">下载APP</a>';
+            } 
+            else if(deviceClass === 2){ // 桌面系统
+                html += webLink;
+                html += '<a href="https://gh.llkk.cc/https://github.com/Chai-Bing-Kun/CNZX-202208/releases/download/v.2025.07.20/CNZX-html.zip" class="btn'+(isGoodNetwork?'':' recommended')+'">下载离线版</a>';
+            }
+            else { // iOS/其他
+                html += webLink;
+            }
+            
+            guide.innerHTML = html + '</div>';
+            guide.style.display = 'block';
+            document.getElementById("cnzx-btn").textContent = '刷新检测';
+        }
+
+        // 事件绑定
+        document.getElementById("help-btn").onclick = e => {
+            e.preventDefault();
+            document.getElementById("help-popup").style.display = 
+            document.getElementById("overlay").style.display = "block";
+        };
+        document.querySelector(".close-btn").onclick = () => {
+            document.getElementById("help-popup").style.display = 
+            document.getElementById("overlay").style.display = "none";
+        };
+        document.getElementById("cnzx-btn").onclick = e => {
+            e.preventDefault();
+            const guide = document.getElementById("cnzx-guide");
+            guide.style.display = guide.style.display === 'block' ? 'none' : 'block';
+            if(guide.style.display === 'block') showGuide();
+        };
+    </script>
+</body>
+</html>

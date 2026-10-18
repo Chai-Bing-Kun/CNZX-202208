@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快乐时光</title>
+    <style>
+        :root {
+            --dark-bg: #121212;
+            --darker-bg: #0a0a0a;
+            --accent-color: #6a5acd;
+            --text-color: #e0e0e0;
+            --text-muted: #888;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+        
+        header {
+            background-color: var(--darker-bg);
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+        
+        h1 {
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin: 0 auto; /* 添加这行保持居中 */
+            width: fit-content; /* 添加这行自适应宽度 */
+        }
+        
+        .gallery-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* 缩略图导航区 */
+        .thumbnail-nav {
+            display: flex;
+            overflow-x: auto;
+            gap: 8px;
+            padding: 1rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) var(--darker-bg);
+            margin-bottom: 2rem;
+        }
+        
+        .thumbnail-nav::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .thumbnail-nav::-webkit-scrollbar-track {
+            background: var(--darker-bg);
+        }
+        
+        .thumbnail-nav::-webkit-scrollbar-thumb {
+            background-color: var(--accent-color);
+            border-radius: 4px;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            opacity: 0.8;
+            border: 2px solid transparent;
+        }
+        
+        .thumbnail:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            opacity: 1;
+        }
+        
+        .thumbnail.active {
+            border-color: var(--accent-color);
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        
+        /* 主展示区 */
+        .main-display {
+            position: relative;
+            height: 70vh;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            background-color: var(--darker-bg);
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #000;
+            transition: opacity 0.5s ease;
+        }
+        
+        /* 导航按钮 */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .prev-btn {
+            left: 20px;
+        }
+        
+        .next-btn {
+            right: 20px;
+        }
+        
+        /* 图片信息 */
+        .image-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 1.5rem;
+            color: white;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .main-display:hover .image-info {
+            transform: translateY(0);
+        }
+        
+        .image-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .image-index {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        /* 加载动画 */
+        .loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite;
+            z-index: 2;
+        }
+        
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .gallery-container {
+                padding: 1rem;
+            }
+            
+            .thumbnail {
+                width: 60px;
+                height: 45px;
+            }
+            
+            .main-display {
+                height: 50vh;
+            }
+            
+            .nav-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* 网格视图切换 */
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .toggle-btn {
+            background-color: var(--darker-bg);
+            border: 1px solid var(--accent-color);
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-btn:first-child {
+            border-radius: 4px 0 0 4px;
+        }
+        
+        .toggle-btn:last-child {
+            border-radius: 0 4px 4px 0;
+        }
+        
+        .toggle-btn.active {
+            background-color: var(--accent-color);
+        }
+        
+        /* 网格视图样式 */
+        .grid-view {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+        
+        .grid-view.active {
+            display: grid;
+        }
+        
+        .grid-item {
+            position: relative;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 4/3;
+            transition: transform 0.3s ease;
+        }
+        
+        .grid-item:hover {
+            transform: scale(1.03);
+        }
+        
+        .grid-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 全屏模式 */
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .fullscreen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .fullscreen-img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .fullscreen-nav {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        
+        .fs-nav-btn {
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="../main.html" style="position: absolute; left: 20px; color: #e0e0e0; text-decoration: none;">&lt; 返回首页</a>
+        <h1>快乐时光</h1>
+    </header>
+    
+    <div class="gallery-container">
+        <div class="view-toggle">
+            <button class="toggle-btn active" data-view="slideshow">幻灯片</button>
+            <button class="toggle-btn" data-view="grid">网格</button>
+        </div>
+        
+        <!-- 幻灯片视图 -->
+        <div id="slideshow-view">
+            <div class="main-display">
+                <div class="loader"></div>
+                <img class="main-image" alt="展示图片">
+                <div class="image-info">
+                    <h3 class="image-title">图片标题</h3>
+                    <p class="image-index">1/100</p>
+                </div>
+                <button class="nav-btn prev-btn">❮</button>
+                <button class="nav-btn next-btn">❯</button>
+            </div>
+            
+            <div class="thumbnail-nav">
+                <!-- 缩略图将通过JS动态生成 -->
+            </div>
+        </div>
+        
+        <!-- 网格视图 -->
+        <div id="grid-view" class="grid-view">
+            <!-- 网格项将通过JS动态生成 -->
+        </div>
+    </div>
+    
+    <!-- 全屏视图 -->
+    <div class="fullscreen">
+        <button class="close-btn">×</button>
+        <div class="fullscreen-nav">
+            <button class="fs-nav-btn prev-btn">❮</button>
+            <button class="fs-nav-btn next-btn">❯</button>
+        </div>
+        <img class="fullscreen-img" alt="全屏图片">
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 配置
+            const totalImages = 100;
+            const imageFolder = 'img-happy-time/';
+            const imageExtension = '.png';
+            
+            // DOM元素
+            const mainImage = document.querySelector('.main-image');
+            const mainDisplay = document.querySelector('.main-display');
+            const loader = document.querySelector('.loader');
+            const imageTitle = document.querySelector('.image-title');
+            const imageIndex = document.querySelector('.image-index');
+            const thumbnailNav = document.querySelector('.thumbnail-nav');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+            const fsPrevBtn = document.querySelector('.fullscreen .prev-btn');
+            const fsNextBtn = document.querySelector('.fullscreen .next-btn');
+            const toggleButtons = document.querySelectorAll('.toggle-btn');
+            const slideshowView = document.getElementById('slideshow-view');
+            const gridView = document.getElementById('grid-view');
+            const fullscreen = document.querySelector('.fullscreen');
+            const fullscreenImg = document.querySelector('.fullscreen-img');
+            const closeBtn = document.querySelector('.close-btn');
+            
+            // 状态
+            let currentIndex = 0;
+            let imagesLoaded = 0;
+            let isTransitioning = false;
+            
+            // 预加载图片
+            function preloadImages() {
+                for (let i = 1; i <= totalImages; i++) {
+                    const img = new Image();
+                    img.src = `${imageFolder}${i}${imageExtension}`;
+                    img.onload = () => {
+                        imagesLoaded++;
+                        if (imagesLoaded === totalImages) {
+                            loader.style.display = 'none';
+                            initGallery();
+                        }
+                    };
+                    img.onerror = () => {
+                        console.error(`无法加载图片: ${i}${imageExtension}`);
+                        imagesLoaded++; // 即使出错也计数，避免卡住
+                        if (imagesLoaded === totalImages) {
+                            loader.style.display = 'none';
+                            initGallery();
+                        }
+                    };
+                }
+            }
+            
+            // 初始化画廊
+            function initGallery() {
+                // 创建缩略图
+                for (let i = 1; i <= totalImages; i++) {
+                    const thumb = document.createElement('img');
+                    thumb.className = 'thumbnail';
+                    thumb.src = `${imageFolder}${i}${imageExtension}`;
+                    thumb.dataset.index = i - 1;
+                    thumb.addEventListener('click', () => goToImage(i - 1));
+                    thumbnailNav.appendChild(thumb);
+                }
+                
+                // 创建网格项
+                for (let i = 1; i <= totalImages; i++) {
+                    const gridItem = document.createElement('div');
+                    gridItem.className = 'grid-item';
+                    gridItem.dataset.index = i - 1;
+                    
+                    const gridImg = document.createElement('img');
+                    gridImg.className = 'grid-img';
+                    gridImg.src = `${imageFolder}${i}${imageExtension}`;
+                    gridImg.alt = `图片 ${i}`;
+                    
+                    gridItem.appendChild(gridImg);
+                    gridItem.addEventListener('click', () => {
+                        currentIndex = i - 1;
+                        updateMainImage();
+                        toggleView('slideshow');
+                    });
+                    
+                    gridView.appendChild(gridItem);
+                }
+                
+                // 显示第一张图片
+                updateMainImage();
+            }
+            
+            // 更新主显示图片
+            function updateMainImage() {
+                if (isTransitioning) return;
+                
+                isTransitioning = true;
+                mainImage.style.opacity = 0;
+                
+                setTimeout(() => {
+                    const imageNum = currentIndex + 1;
+                    mainImage.src = `${imageFolder}${imageNum}${imageExtension}`;
+                    mainImage.alt = `图片 ${imageNum}`;
+                    imageTitle.textContent = `图片 ${imageNum}`;
+                    imageIndex.textContent = `${imageNum}/${totalImages}`;
+                    
+                    // 更新活动缩略图
+                    const thumbs = document.querySelectorAll('.thumbnail');
+                    thumbs.forEach((thumb, index) => {
+                        thumb.classList.toggle('active', index === currentIndex);
+                    });
+                    
+                    // 确保活动缩略图可见
+                    if (thumbs[currentIndex]) {
+                        thumbs[currentIndex].scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest',
+                            inline: 'center'
+                        });
+                    }
+                    
+                    mainImage.style.opacity = 1;
+                    isTransitioning = false;
+                }, 300);
+            }
+            
+            // 跳转到指定图片
+            function goToImage(index) {
+                if (index < 0) index = totalImages - 1;
+                if (index >= totalImages) index = 0;
+                
+                currentIndex = index;
+                updateMainImage();
+            }
+            
+            // 切换视图
+            function toggleView(view) {
+                if (view === 'slideshow') {
+                    slideshowView.style.display = 'block';
+                    gridView.classList.remove('active');
+                    toggleButtons[0].classList.add('active');
+                    toggleButtons[1].classList.remove('active');
+                } else {
+                    slideshowView.style.display = 'none';
+                    gridView.classList.add('active');
+                    toggleButtons[0].classList.remove('active');
+                    toggleButtons[1].classList.add('active');
+                }
+            }
+            
+            // 全屏功能
+            function openFullscreen() {
+                const imageNum = currentIndex + 1;
+                fullscreenImg.src = `${imageFolder}${imageNum}${imageExtension}`;
+                fullscreen.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeFullscreen() {
+                fullscreen.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+            
+            // 事件监听
+            prevBtn.addEventListener('click', () => goToImage(currentIndex - 1));
+            nextBtn.addEventListener('click', () => goToImage(currentIndex + 1));
+            fsPrevBtn.addEventListener('click', () => goToImage(currentIndex - 1));
+            fsNextBtn.addEventListener('click', () => goToImage(currentIndex + 1));
+            
+            toggleButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    toggleView(btn.dataset.view);
+                });
+            });
+            
+            mainImage.addEventListener('click', openFullscreen);
+            closeBtn.addEventListener('click', closeFullscreen);
+            
+            // 键盘导航
+            document.addEventListener('keydown', (e) => {
+                if (fullscreen.classList.contains('active')) {
+                    if (e.key === 'Escape') closeFullscreen();
+                    if (e.key === 'ArrowLeft') goToImage(currentIndex - 1);
+                    if (e.key === 'ArrowRight') goToImage(currentIndex + 1);
+                }
+            });
+            
+            // 触摸滑动
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            mainDisplay.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, false);
+            
+            mainDisplay.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, false);
+            
+            function handleSwipe() {
+                if (touchEndX < touchStartX) {
+                    goToImage(currentIndex + 1); // 向左滑动，下一张
+                }
+                if (touchEndX > touchStartX) {
+                    goToImage(currentIndex - 1); // 向右滑动，上一张
+                }
+            }
+            
+            // 开始预加载
+            preloadImages();
+        });
+    </script>
+</body>
+</html>
